@@ -1,0 +1,14 @@
+{
+   "description": {
+      "description": "A short description of the extension",
+      "message": "Es öffnet PGN auf einen Chess.com Spiel (v3) für lichess.org Analyse"
+   },
+   "locale": {
+      "description": "2-letter language code (excluding subvariant)",
+      "message": "de"
+   },
+   "name": {
+      "description": "Extension name",
+      "message": "Chess.com (v3) Analyse"
+   }
+}
