@@ -16,7 +16,7 @@ function getGameId(url) {
     }
 
     // archived game v3
-    var refIndex = url.indexOf('live/game/');
+    refIndex = url.indexOf('live/game/');
     if (refIndex >= 0) {
         return url.slice(refIndex + 'live/game/'.length);
     }
@@ -28,12 +28,13 @@ function getGameId(url) {
     {
      	return ref.split('=')[1];
     }
-    
     return '';
 }
 
 function onWebNav(details) {
     var gameId = getGameId(details.url);
+    console.log("gameid = " + gameId);
+
     if (gameId !== '') { // Starts with e? show page action
         chrome.pageAction.show(details.tabId);	
     } else {
@@ -47,7 +48,7 @@ chrome.pageAction.onClicked.addListener(function(tab){
     // this URL does not work from v3.
      
     var onDone = function(pgn, b, c){
-            if(pgn.indexOf('[Result ')>=0 && pgn.indexOf('[Result "*"]') < 0){
+            if(pgn.indexOf('[Result ') >=0 && pgn.indexOf('[Result "*"]') < 0){
                 chrome.tabs.create({url:"http://"+chrome.i18n.getMessage("locale")+".lichess.org/paste"}, function(tab){
                     tabId = tab.id;
                 });
@@ -80,12 +81,29 @@ chrome.pageAction.onClicked.addListener(function(tab){
     }
 });
 
-
 // Base filter
 var filter = {
-    url: [{
-        hostEquals: 'www.chess.com'
-    }]
+    url: [
+        {
+            // live game v2
+            hostEquals: 'live.chess.com',
+            pathContains: "live"
+        },
+        {   // archived game v2
+            hostEquals: 'www.chess.com', 
+            pathContains: 'livechess/game'
+        },
+        {
+            // archived game v3
+            hostEquals: 'www.chess.com',
+            pathContains: 'live/game'
+        },
+        {
+            // live game v3
+            hostEquals: 'www.chess.com',
+            pathContains: 'live'
+        }
+    ]
 };
 
 chrome.webNavigation.onCommitted.addListener(onWebNav, filter);

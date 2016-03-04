@@ -4,3 +4,4 @@ temp
 dist
 *.sublime-project
 *.sublime-workspace
+.DSStore

@@ -1,6 +1,6 @@
 {
   "name": "__MSG_name__",
-  "version": "2.0",
+  "version": "2.1",
   "manifest_version": 2,
   "description": "__MSG_description__",
   "homepage_url": "http://www.zerosharp.com",
@@ -38,9 +38,11 @@
       "64": "icons/knight64.png"
       }
   },
-  "permissions": [
+  "permissions": [  
     "tabs",
     "webNavigation",
-    "https://*.chess.com/, http://*.lichess.org/"
+    "https://www.chess.com/", 
+    "https://live.chess.com/", 
+    "http://*.lichess.org/"
   ]
 }
