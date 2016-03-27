@@ -70,7 +70,7 @@ chrome.pageAction.onClicked.addListener(function(tab){
     else // v3
     {
         // I can't find how to get the PGN without switching back to v2 and then back again...
-        $.get("https://www.chess.com/switch?request_uri=/live/game/" + gameId)
+        $.post("https://www.chess.com/switch?request_uri=/live/game/" + gameId)
         .done(function(pgn, b, c){
             $.get(pgnURL)
             .done(onDone)
