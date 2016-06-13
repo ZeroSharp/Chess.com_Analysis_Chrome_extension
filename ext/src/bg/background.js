@@ -44,9 +44,8 @@ function onWebNav(details) {
 
 chrome.pageAction.onClicked.addListener(function(tab){    
  	var gameId = getGameId(tab.url);
-	var pgnURL = 'https://www.chess.com/echess/download_pgn?lid=' + gameId;
+	var pgnUrl = 'https://www.chess.com/echess/download_pgn?lid=' + gameId;
     // this URL does not work from v3.
-     
     var onDone = function(pgn, b, c){
             if(pgn.indexOf('[Result ') >=0 && pgn.indexOf('[Result "*"]') < 0){
                 chrome.tabs.create({url:"http://"+chrome.i18n.getMessage("locale")+".lichess.org/paste"}, function(tab){
@@ -64,7 +63,7 @@ chrome.pageAction.onClicked.addListener(function(tab){
     // if v2
     if (isChessComVersion2(tab.url))
     {
-        $.get(pgnURL)
+        $.get(pgnUrl)
             .done(onDone);
     }
     else // v3
@@ -72,7 +71,7 @@ chrome.pageAction.onClicked.addListener(function(tab){
         // I can't find how to get the PGN without switching back to v2 and then back again...
         $.post("https://www.chess.com/switch?request_uri=/live/game/" + gameId)
         .done(function(pgn, b, c){
-            $.get(pgnURL)
+            $.get(pgnUrl)
             .done(onDone)
         })
         .always(function(pgn, b, c){
