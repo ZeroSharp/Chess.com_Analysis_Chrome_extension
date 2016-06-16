@@ -31,52 +31,48 @@ function getGameId(url) {
     return '';
 }
 
-function onWebNav(details) {
-    var gameId = getGameId(details.url);
-    console.log("gameid = " + gameId);
-
-    if (gameId !== '') { // Starts with e? show page action
-        chrome.pageAction.show(details.tabId);	
-    } else {
-        chrome.pageAction.hide(details.tabId);
-    }
-}
-
 chrome.pageAction.onClicked.addListener(function(tab){    
- 	var gameId = getGameId(tab.url);
-	var pgnUrl = 'https://www.chess.com/echess/download_pgn?lid=' + gameId;
-    // this URL does not work from v3.
-    var onDone = function(pgn, b, c){
-            if(pgn.indexOf('[Result ') >=0 && pgn.indexOf('[Result "*"]') < 0){
-                chrome.tabs.create({url:"http://"+chrome.i18n.getMessage("locale")+".lichess.org/paste"}, function(tab){
-                    tabId = tab.id;
-                });
-                chrome.tabs.onUpdated.addListener(function(id , info) {
-                    if (id == tabId && info.status == "complete" && pgn != null) {
-                        chrome.tabs.sendMessage(tabId, pgn);
-                        pgn = null;
-                    }
-                });
-            }
-        };
-    
+    var onDone = function(pgn, b, c) {
+        if (!pgn)
+            return;
+        if(pgn.indexOf('[Result ') > -1 && pgn.indexOf('[Result "*"]') < 0){  
+            chrome.tabs.create({url:"http://"+chrome.i18n.getMessage("locale")+".lichess.org/paste"}, function(tab){
+                tabId = tab.id;
+            });
+            chrome.tabs.onUpdated.addListener(function(id , info) {
+                if (id == tabId && info.status == "complete" && pgn != null) {
+                    chrome.tabs.sendMessage(tabId, pgn);
+                    pgn = null;
+                }
+            });
+        }
+        else
+        {
+            chrome.tabs.executeScript(tab.id, {
+                code: 'toast("Game is not yet finished.");'
+            });
+        }
+    };
+
     // if v2
     if (isChessComVersion2(tab.url))
     {
+        var gameId = getGameId(tab.url);
+	    var pgnUrl = 'https://www.chess.com/echess/download_pgn?lid=' + gameId;
+        // this URL does not work from v3.
+
         $.get(pgnUrl)
             .done(onDone);
     }
     else // v3
     {
-        // I can't find how to get the PGN without switching back to v2 and then back again...
-        $.post("https://www.chess.com/switch?request_uri=/live/game/" + gameId)
-        .done(function(pgn, b, c){
-            $.get(pgnUrl)
-            .done(onDone)
-        })
-        .always(function(pgn, b, c){
-            $.get("https://www.chess.com/switch?request_uri=%2Flivechess%2Fgame%3Fid%3" + gameId)
-        });
+        chrome.tabs.executeScript(tab.id, {
+            code: 'getCurrentPgn();'
+        }, function(results, b, c) {
+            // returns an array of results
+            for(var index in results){
+              onDone(results[index], b, c);
+        }});
     }
 });
 
@@ -104,6 +100,22 @@ var filter = {
         }
     ]
 };
+
+function onWebNav(details) {
+    chrome.pageAction.show(details.tabId);
+
+    // pageAction no longer hides icon.
+    // https://productforums.google.com/forum/#!topic/chrome/wOUFbsKqPg0
+
+    // var gameId = getGameId(details.url);
+    // console.log("gameid = " + gameId);
+
+    // if (gameId !== '') { // Starts with e? show page action
+    //     chrome.pageAction.show(details.tabId);	
+    // } else {
+    //     chrome.pageAction.hide(details.tabId);
+    // }
+}
 
 chrome.webNavigation.onCommitted.addListener(onWebNav, filter);
 chrome.webNavigation.onHistoryStateUpdated.addListener(onWebNav, filter);

@@ -4,4 +4,5 @@ chrome.runtime.onMessage.addListener(
       $("#import_analyse").prop("checked", true);
       var form = $("#import_analyse").closest("form");
 	  form.find(":submit").click();
-}) 
+});
+
