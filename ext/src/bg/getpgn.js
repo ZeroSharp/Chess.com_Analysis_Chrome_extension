@@ -4,11 +4,15 @@ function getCurrentPgn() {
     pgn = $('textarea[class="full"]').val();
     var closeButton = $(':button[class="close"][id]').click();
     closeButton.click();
+    // The termination field confuses the PDF converter so the result
+    // is often output as a draw. This replaces the content with "Normal"
+    // which seems to work correctly.
+    pgn = pgn.replace(/Termination "([^"]+)"/g, 'Termination "Normal"');
     return pgn;
 }
 
-function toast(message) {
-    var toastMessage = $('<div class="toast" style="display:none">' + message + '</div>');
+function popuptoast(message) {
+    var toastMessage = $('<div class="popuptoast" style="display:none">' + message + '</div>');
 
     $(document.body).append(toastMessage);
     toastMessage.stop().fadeIn(400).delay(2000).fadeOut(400); //fade out after 2 seconds

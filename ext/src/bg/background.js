@@ -49,7 +49,7 @@ chrome.pageAction.onClicked.addListener(function(tab){
         else
         {
             chrome.tabs.executeScript(tab.id, {
-                code: 'toast("Game is not yet finished.");'
+                code: 'popuptoast("Game is not yet finished.");'
             });
         }
     };

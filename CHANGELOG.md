@@ -18,3 +18,11 @@
 * Fixes to support chess.com changes in v3.
 * Improved method of pgn retrieval in v3. Much smoother transition.
 * Warning message is displayed when the game is still in progress.
+
+## Version 2.4.1
+
+* Fixed css name clash.
+
+## Version 2.4.2
+
+* 'Export to PDF' from lichess was not correctly determining the winner owing to an anomaly in the chess.com pgn.
