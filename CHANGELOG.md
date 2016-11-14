@@ -1,16 +1,20 @@
 # Changelog
 
-## Version 2.2.1
+## Version 2.5.0
 
-* Improved reliability of toggling 'computer analysis' before submitting pgn to lichess.
+* Added support for 'Print-friendly PDF export' which was removed from lichess in November 2016.
 
-## Version 2.2.0
+## Version 2.4.4
 
-* Fixed since chess.com change to 'switch to old chess.com' which now requires POST.
+* Fixed support for analysing live games.
 
-## Version 2.3.0
+## Version 2.4.2
 
-* Fixed to support https changes on lichess.org.
+* 'Export to PDF' from lichess was not correctly determining the winner owing to an anomaly in the chess.com pgn.
+
+## Version 2.4.1
+
+* Fixed css name clash.
 
 ## Version 2.4.0
 
@@ -19,10 +23,14 @@
 * Improved method of pgn retrieval in v3. Much smoother transition.
 * Warning message is displayed when the game is still in progress.
 
-## Version 2.4.1
+## Version 2.3.0
 
-* Fixed css name clash.
+* Fixed to support https changes on lichess.org.
 
-## Version 2.4.2
+## Version 2.2.1
 
-* 'Export to PDF' from lichess was not correctly determining the winner owing to an anomaly in the chess.com pgn.
+* Improved reliability of toggling 'computer analysis' before submitting pgn to lichess.
+
+## Version 2.2.0
+
+* Fixed since chess.com change to 'switch to old chess.com' which now requires POST.

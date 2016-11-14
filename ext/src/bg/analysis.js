@@ -5,4 +5,3 @@ chrome.runtime.onMessage.addListener(
       var form = $("#import_analyse").closest("form");
 	  form.find(":submit").click();
 });
-

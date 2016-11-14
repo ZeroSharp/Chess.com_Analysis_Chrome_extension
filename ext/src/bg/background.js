@@ -70,7 +70,7 @@ chrome.pageAction.onClicked.addListener(function(tab){
             code: 'getCurrentPgn();'
         }, function(results, b, c) {
             // returns an array of results
-            for(var index in results){
+            for(var index in results) {
               onDone(results[index], b, c);
         }});
     }
