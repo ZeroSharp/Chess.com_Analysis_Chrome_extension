@@ -7,7 +7,11 @@ function getCurrentPgn() {
     // The termination field confuses the PDF converter so the result
     // is often output as a draw. This replaces the content with "Normal"
     // which seems to work correctly.
-    pgn = pgn.replace(/Termination "([^"]+)"/g, 'Termination "Normal"');
+    if (pgn.indexOf(" won on time") !== -1) {
+        pgn = pgn.replace(/Termination "([^"]+)"/g, 'Termination "Time forfeit"');
+    } else {
+        pgn = pgn.replace(/Termination "([^"]+)"/g, 'Termination "Normal"');
+    }
     return pgn;
 }
 

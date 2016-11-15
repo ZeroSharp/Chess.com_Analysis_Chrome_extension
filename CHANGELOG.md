@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 2.5.1
+
+* Games lost on time were not being detected as such during lichess import.
+
 ## Version 2.5.0
 
 * Added support for 'Print-friendly PDF export' which was removed from lichess in November 2016.
