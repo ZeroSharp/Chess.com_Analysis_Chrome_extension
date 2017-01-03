@@ -1,5 +1,18 @@
 # Changelog
 
+## Version 2.5.4
+
+* Fixed broken link when analysing after game has finished.
+* Now works from live analysis board (urls with 'live#a=1234567').
+
+## Version 2.5.3
+
+* Print-friendly PDF has been removed to a separate extension (Lichess Print-friendly PDF)[https://chrome.google.com/webstore/detail/lichess-print-friendly-pd/goijhimgdjppmhmjkaglhggoapkgobfg].
+
+## Version 2.5.2
+
+* Print-friendly PDF export now uses AWS lambda.
+
 ## Version 2.5.1
 
 * Games lost on time were not being detected as such during lichess import.

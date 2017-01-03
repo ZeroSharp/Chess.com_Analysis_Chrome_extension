@@ -1,6 +1,6 @@
 {
   "name": "__MSG_name__",
-  "version": "2.5.1",
+  "version": "2.5.4",
   "manifest_version": 2,
   "description": "__MSG_description__",
   "homepage_url": "http://www.zerosharp.com",
@@ -29,13 +29,6 @@
           ],
       "matches": [ "https://*.lichess.org/paste" ]
     }, 
-    {
-      "js": [ 
-          "js/jquery-2.1.3.min.js", 
-          "src/bg/exporttopdf.js" 
-          ],
-      "matches": [ "https://*.lichess.org/*" ]
-    },     
     {
       "css":[
           "css/getpgn.css"

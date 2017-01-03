@@ -35,7 +35,7 @@ chrome.pageAction.onClicked.addListener(function(tab){
     var onDone = function(pgn, b, c) {
         if (!pgn)
             return;
-        if(pgn.indexOf('[Result ') > -1 && pgn.indexOf('[Result "*"]') < 0){  
+        if(tab.url.indexOf("live#a=") > -1 || (pgn.indexOf('[Result ') > -1 && pgn.indexOf('[Result "*"]') < 0)) {  
             chrome.tabs.create({url:"http://"+chrome.i18n.getMessage("locale")+".lichess.org/paste"}, function(tab){
                 tabId = tab.id;
             });
@@ -103,18 +103,6 @@ var filter = {
 
 function onWebNav(details) {
     chrome.pageAction.show(details.tabId);
-
-    // pageAction no longer hides icon.
-    // https://productforums.google.com/forum/#!topic/chrome/wOUFbsKqPg0
-
-    // var gameId = getGameId(details.url);
-    // console.log("gameid = " + gameId);
-
-    // if (gameId !== '') { // Starts with e? show page action
-    //     chrome.pageAction.show(details.tabId);	
-    // } else {
-    //     chrome.pageAction.hide(details.tabId);
-    // }
 }
 
 chrome.webNavigation.onCommitted.addListener(onWebNav, filter);

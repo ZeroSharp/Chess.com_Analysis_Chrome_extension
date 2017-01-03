@@ -1,5 +1,5 @@
 function getCurrentPgn() {
-    var button = $('#live_ShareMenuGlobalDialogDownloadButton')[0] || $(":button[ng-click='downloadPgn()']")[0];
+    var button = $('[id*="_ShareMenuGlobalDialogDownloadButton"')[0] || $(":button[ng-click='downloadPgn()']")[0];
     button.click();
     pgn = $('textarea[class="full"]').val();
     var closeButton = $(':button[class="close"][id]').click();

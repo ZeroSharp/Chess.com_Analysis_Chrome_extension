@@ -1,7 +1,7 @@
 Licensed under the [MIT license](http://www.opensource.org/licenses/MIT):
 
 <pre>
-Copyright (c) 2015 Robert Anderson
+Copyright (c) 2016 Robert Anderson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, 

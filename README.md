@@ -6,7 +6,6 @@
 * Supports chess.com v3 (new chess.com) and v2 (old chess.com).
 * Works from the game archive as well as from finished live games.
 * Automatically toggles the new 'computer analysis' check box on the lichess.org import page.
-* Reinstates the 'Print-friendly PDF export' which was removed from lichess in November 2016.
 
 Thanks to Allan Rempel who created a similar plugin for chess.com v2.
 
