@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 2.5.5
+
+* Link was not working immediately from live games.  
+* Upgraded to jQuery 3.3.1.
+
 ## Version 2.5.4
 
 * Fixed broken link when analysing after game has finished.

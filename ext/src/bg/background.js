@@ -97,6 +97,11 @@ var filter = {
             // live game v3
             hostEquals: 'www.chess.com',
             pathContains: 'live'
+        },
+        {
+            // computer game v3
+            hostEquals: 'www.chess.com',
+            pathContains: 'play'
         }
     ]
 };
