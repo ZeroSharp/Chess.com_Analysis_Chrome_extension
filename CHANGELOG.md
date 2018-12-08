@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 2.5.6
+* Updated for recent changes to Lichess import page.
+
 ## Version 2.5.5
 
 * Link was not working immediately from live games.  
