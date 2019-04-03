@@ -1,8 +1,13 @@
 async function getCurrentPgn() {
-    var pgn = $('input[name="pgn"]').val();
+    var pgn = null;
+    var pgnInput = $('input[name="pgn"]');
+    if (pgnInput)
+    {
+        pgn = pgnInput.val();
+        closeShareDialog();
+    }
     if (!pgn) {
-        pgn = await openShareDialog().then(openPgnTab).then(copyPgn);
-
+        pgn = await openShareDialog().then(openPgnTab).then(copyPgn).finally(closeShareDialog);
     }
     if (pgn) {
         // The termination field confuses the PDF converter so the result
@@ -14,13 +19,12 @@ async function getCurrentPgn() {
             pgn = pgn.replace(/Termination "([^"]+)"/g, 'Termination "Normal"');
         }
     }
-    closeShareDialog();
     return pgn;
 }
 
-
 async function openPgnTab() {
-    var pgnTab = document.querySelector("#live_ShareMenuGlobalDialogDownloadButton");
+    var pgnTab = document.querySelector("#live_ShareMenuGlobalDialogDownloadButton") ||
+        document.querySelector(".icon-font-chess.download.icon-font-primary");
     if (!pgnTab) {
         var headerElements = document.querySelectorAll(
             ".share-menu-dialog-component header *") || document;
@@ -35,7 +39,8 @@ async function openPgnTab() {
 
 async function openShareDialog() {
     var shareButton = document.querySelector('button.share-button-component.icon-share') ||
-        document.querySelector("#shareMenuButton");
+        document.querySelector("#shareMenuButton") ||
+        document.querySelector(".icon-font-chess.share.icon-font-primary");
     if (shareButton) {
         return new Promise((resolve, reject) => {
             shareButton.click()
@@ -49,16 +54,18 @@ async function openShareDialog() {
 }
 
 function closeShareDialog() {
-    var closeButton = $(".modal-container-component .x");
+    var closeButton = document.querySelector("#live_ShareMenuGlobalDialogCloseButton")
+        || document.querySelector(".icon-font-chess.x.icon-font-primary");
     if (closeButton) {
         closeButton.click();
-    }
+    } 
 }
 
 function copyPgn() {
     var textarea = document.querySelector(
             "#live_ShareMenuPgnContentTextareaId") ||
-        document.querySelector("textarea[name=pgn]");
+        document.querySelector("textarea[name=pgn]") ||
+        document.querySelector(".form-textarea-component.pgn-download-textarea");
     return textarea.value;
 }
 

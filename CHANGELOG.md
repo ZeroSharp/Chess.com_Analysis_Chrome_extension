@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 2.6.0
+* Updated for recent changes to chess.com. Calls are now async. (Thanks 0ddFell0w!)
+* Added support for analysis of daily games.
+
 ## Version 2.5.6
 * Updated for recent changes to Lichess import page.
 

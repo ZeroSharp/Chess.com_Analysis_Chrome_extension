@@ -92,11 +92,16 @@ var filter = {
         // computer game v3
         hostEquals: 'www.chess.com',
         pathContains: 'play'
+    }, {
+        // daily game v3
+        hostEquals: 'www.chess.com',
+        pathContains: 'daily'
     }]
 };
 
 function onWebNav(details) {
     chrome.pageAction.show(details.tabId);
+    return Promise.resolve("Dummy response to keep the console quiet");
 }
 
 chrome.webNavigation.onCommitted.addListener(onWebNav, filter);
