@@ -16,33 +16,36 @@
   "default_locale": "en",
   "background": {
     "scripts": [
-      "js/jquery-3.3.1.min.js", 
-      "src/bg/background.js"
+      "js/chrome-extension-async.js",
+      "js/execute-async-function.js",
+      "js/jquery-3.3.1.min.js",
+      "src/bg/background.js",
+      "src/bg/getpgn.js"
     ],
     "persistent": false
   },
-  "content_scripts": [ 
+  "content_scripts": [
     {
-      "js": [ 
-          "js/jquery-3.3.1.min.js", 
-          "src/bg/analysis.js" 
+      "js": [
+          "js/jquery-3.3.1.min.js",
+          "src/bg/analysis.js"
           ],
       "matches": [ "https://*.lichess.org/paste" ]
-    }, 
+    },
     {
       "css":[
           "css/getpgn.css"
       ],
-      "js": [ 
-          "js/jquery-3.3.1.min.js",       
-          "src/bg/getpgn.js" 
+      "js": [
+          "js/jquery-3.3.1.min.js",
+          "src/bg/getpgn.js"
           ],
       "matches": [
-        "https://www.chess.com/live/game/", 
+        "https://www.chess.com/live/game/",
         "https://www.chess.com/live*",
         "https://www.chess.com/play*"]
-    } 
-  ],    
+    }
+  ],
   "page_action": {
     "default_icon": {
       "128": "icons/knight128.png",
@@ -53,11 +56,11 @@
       "64": "icons/knight64.png"
       }
   },
-  "permissions": [ 
+  "permissions": [
     "tabs",
     "webNavigation",
-    "https://www.chess.com/", 
-    "https://live.chess.com/", 
+    "https://www.chess.com/",
+    "https://live.chess.com/",
     "https://*.lichess.org/"
   ]
 }
