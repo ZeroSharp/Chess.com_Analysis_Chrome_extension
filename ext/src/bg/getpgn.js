@@ -33,10 +33,6 @@ async function openPgnTab() {
     });
 }
 
-function getShareButtonElement() {
-    var share
-}
-
 async function openShareDialog() {
     var shareButton = document.querySelector('button.share-button-component.icon-share') ||
         document.querySelector("#shareMenuButton");
