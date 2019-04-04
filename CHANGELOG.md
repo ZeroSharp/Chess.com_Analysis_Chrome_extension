@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 2.6.1
+* Fixed for immediately finished live games.
+
 ## Version 2.6.0
 * Updated for recent changes to chess.com. Calls are now async. (Thanks 0ddFell0w!)
 * Added support for analysis of daily games.

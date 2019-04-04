@@ -40,7 +40,9 @@ async function openPgnTab() {
 async function openShareDialog() {
     var shareButton = document.querySelector('button.share-button-component.icon-share') ||
         document.querySelector("#shareMenuButton") ||
-        document.querySelector(".icon-font-chess.share.icon-font-primary");
+        document.querySelector(".icon-font-chess.share.icon-font-primary") ||
+        document.querySelector(".game-over-footer-icon .icon-share");
+
     if (shareButton) {
         return new Promise((resolve, reject) => {
             shareButton.click()
@@ -55,7 +57,8 @@ async function openShareDialog() {
 
 function closeShareDialog() {
     var closeButton = document.querySelector("#live_ShareMenuGlobalDialogCloseButton")
-        || document.querySelector(".icon-font-chess.x.icon-font-primary");
+        || document.querySelector(".icon-font-chess.x.icon-font-primary")
+        || document.querySelector(".icon-font-chess.x.icon-font-secondary");
     if (closeButton) {
         closeButton.click();
     } 

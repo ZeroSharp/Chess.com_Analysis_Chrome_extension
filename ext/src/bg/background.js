@@ -68,7 +68,7 @@ chrome.pageAction.onClicked.addListener(async function(tab) {
         var results = await chrome.tabs.executeAsyncFunction(tab.id,
             'getCurrentPgn');
         onDone(results);
-    }
+    }    
 });
 
 // Base filter
