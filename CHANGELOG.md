@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 3.0.0
+* Support for games from chessgames.com and chess-db.com.
+* Improved manifest to limit permissions as much as possible.
+* Icon now becomes enabled only when there is a valid game to analyse.
+* Improved colour of icon so that it is clear when it is available.
+
 ## Version 2.6.1
 * Fixed for immediately finished live games.
 

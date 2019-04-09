@@ -2,8 +2,7 @@
 
  This extension has the following features:
 
-* Uploads any finished game on chess.com for lichess analysis. 
-* Supports chess.com v3 (new chess.com) and v2 (old chess.com).
+* Uploads any finished game on chess.com or chessgames.com for lichess analysis. 
 * Works from the game archive as well as from finished live games.
 * Automatically toggles the new 'computer analysis' check box on the lichess.org import page.
 

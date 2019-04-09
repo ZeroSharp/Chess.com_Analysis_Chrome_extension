@@ -1,14 +1,9 @@
-async function getCurrentPgn() {
-    var pgn = null;
-    var pgnInput = $('input[name="pgn"]');
-    if (pgnInput)
-    {
-        pgn = pgnInput.val();
-        closeShareDialog();
-    }
-    if (!pgn) {
-        pgn = await openShareDialog().then(openPgnTab).then(copyPgn).finally(closeShareDialog);
-    }
+// chess.com
+async function getCurrentPgn_chessCom() { 
+    var pgn = await openShareDialog()
+            .then(openPgnTab)
+            .then(copyPgn)
+            .finally(closeShareDialog);
     if (pgn) {
         // The termination field confuses the PDF converter so the result
         // is often output as a draw. This replaces the content with "Normal"
@@ -18,8 +13,33 @@ async function getCurrentPgn() {
         } else {
             pgn = pgn.replace(/Termination "([^"]+)"/g, 'Termination "Normal"');
         }
+        return Promise.resolve(pgn);
     }
-    return pgn;
+    return Promise.reject();
+}
+
+// chess-db.com
+async function getCurrentPgn_chessDB() { 
+    var pgn = null;
+    var pgnInput = $('input[name="pgn"]');
+    if (pgnInput)
+    {
+        pgn = pgnInput.val();
+        return Promise.resolve(pgn);
+    }
+    return Promise.reject();
+}
+
+// chessTempo.com
+async function getCurrentPgn_chessTempo() { 
+    var pgn = null;
+    var pgnInput = $('button[name="dlPGNpostField"]');
+    if (pgnInput)
+    {
+        pgn = pgnInput.click();
+        return Promise.resolve(pgn);
+    }
+    return Promise.resolve(pgn);
 }
 
 async function openPgnTab() {
@@ -56,17 +76,18 @@ async function openShareDialog() {
 }
 
 function closeShareDialog() {
-    var closeButton = document.querySelector("#live_ShareMenuGlobalDialogCloseButton")
-        || document.querySelector(".icon-font-chess.x.icon-font-primary")
-        || document.querySelector(".icon-font-chess.x.icon-font-secondary");
+    var closeButton = 
+        document.querySelector("#live_ShareMenuGlobalDialogCloseButton") || 
+        document.querySelector(".icon-font-chess.x.icon-font-primary") || 
+        document.querySelector(".icon-font-chess.x.icon-font-secondary");    
     if (closeButton) {
         closeButton.click();
     } 
 }
 
 function copyPgn() {
-    var textarea = document.querySelector(
-            "#live_ShareMenuPgnContentTextareaId") ||
+    var textarea = 
+        document.querySelector("#live_ShareMenuPgnContentTextareaId") ||
         document.querySelector("textarea[name=pgn]") ||
         document.querySelector(".form-textarea-component.pgn-download-textarea");
     return textarea.value;

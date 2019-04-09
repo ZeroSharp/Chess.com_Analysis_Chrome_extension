@@ -8,20 +8,47 @@ function isChessComVersion2(url) {
     return false;
 }
 
+function isChessGames(url) {
+    if (url.indexOf('www.chessgames.com') >= 0) {
+        return true;
+    }
+    return false;
+}
+
+function isChessDB(url) {
+    if (url.indexOf('chess-db.com') >= 0) {
+        return true;
+    }
+    return false;
+}
+
+function isChessTempo(url) {
+    if (url.indexOf('chesstempo.com') >= 0) {
+        return true;
+    }
+    return false;
+}
+
 function getGameId(url) {
-    // archived game v2
+    // chessgames.com
+    var refIndex = url.indexOf('chessgame?gid=');
+    if (refIndex >= 0) {
+        return url.slice(refIndex + 'chessgame?gid='.length);
+    }
+    
+    // archived chess.com game v2
     var refIndex = url.indexOf('livechess/game?id=');
     if (refIndex >= 0) {
         return url.slice(refIndex + 'livechess/game?id='.length);
     }
 
-    // archived game v3
+    // archived chess.com game v3
     refIndex = url.indexOf('live/game/');
     if (refIndex >= 0) {
         return url.slice(refIndex + 'live/game/'.length);
     }
 
-    // live V2 or V3 game
+    // live chess.com game
     refIndex = url.indexOf('#');
     var ref = refIndex >= 0 ? url.slice(refIndex + 1) : '';
     if (ref.indexOf('g') == 0) {
@@ -54,30 +81,43 @@ chrome.pageAction.onClicked.addListener(async function(tab) {
             });
         }
     };
-
     // if v2
     if (isChessComVersion2(tab.url)) {
+        // chess.com v2 (obsolete)
         var gameId = getGameId(tab.url);
         var pgnUrl = 'https://www.chess.com/echess/download_pgn?lid=' + gameId;
         // this URL does not work from v3.
 
         $.get(pgnUrl)
             .done(onDone);
-    } else // v3
-    {
+    } else if (isChessGames(tab.url)) {
+        // chessgames.com
+        var gameId = getGameId(tab.url);        
+        var pgnUrl = 'http://www.chessgames.com/perl/nph-chesspgn?text=1&gid=' + gameId;
+    
+        $.get(pgnUrl)
+            .done(onDone);
+    } else if (isChessTempo(tab.url)) {
+        // chesstempo.com
         var results = await chrome.tabs.executeAsyncFunction(tab.id,
-            'getCurrentPgn');
+            'getCurrentPgn_chessTempo');
+        onDone(results);            
+    } else if (isChessDB(tab.url)) {
+        // chess-db.com
+        var results = await chrome.tabs.executeAsyncFunction(tab.id,
+            'getCurrentPgn_chessDB');
+        onDone(results);    
+    } else {
+        // chess.com
+        var results = await chrome.tabs.executeAsyncFunction(tab.id,
+            'getCurrentPgn_chessCom');
         onDone(results);
     }    
 });
 
 // Base filter
 var filter = {
-    url: [{
-        // live game v2
-        hostEquals: 'live.chess.com',
-        pathContains: "live"
-    }, { // archived game v2
+    url: [{ // archived game v2
         hostEquals: 'www.chess.com',
         pathContains: 'livechess/game'
     }, {
@@ -95,13 +135,28 @@ var filter = {
     }, {
         // daily game v3
         hostEquals: 'www.chess.com',
-        pathContains: 'daily'
+        pathContains: 'daily/game'
+    }, {
+        // chessgames.com
+        hostEquals: 'www.chessgames.com',
+        pathContains: 'perl/chessgame'
+    }, {
+        // chess-db.com
+        hostEquals: 'chess-db.com',
+        pathContains: 'public/game.jsp'
+    }, {
+        // chesstempo.com
+        hostEquals: 'chesstempo.com',
+        pathContains: 'gamedb/player'
+    }, {
+        // chesstempo.com
+        hostEquals: 'chesstempo.com',
+        pathContains: 'gamedb/game'
     }]
 };
 
 function onWebNav(details) {
     chrome.pageAction.show(details.tabId);
-    return Promise.resolve("Dummy response to keep the console quiet");
 }
 
 chrome.webNavigation.onCommitted.addListener(onWebNav, filter);
