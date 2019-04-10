@@ -31,15 +31,21 @@ async function getCurrentPgn_chessDB() {
 }
 
 // chessTempo.com
-async function getCurrentPgn_chessTempo() { 
-    var pgn = null;
-    var pgnInput = $('button[name="dlPGNpostField"]');
-    if (pgnInput)
-    {
-        pgn = pgnInput.click();
+async function getCurrentPgn_chessTempo(gameId) { 
+    var pgn = await $.ajax({        
+        url: $('form.ct-download-pgn-form')[0].action,
+        type: 'POST',
+        data : 'gameids=' + gameId,
+        async: true,
+        success: function(data){
+          return Promise.resolve(data);
+        }
+      });
+
+    if (pgn) {
         return Promise.resolve(pgn);
     }
-    return Promise.resolve(pgn);
+    return Promise.reject();
 }
 
 async function openPgnTab() {
@@ -48,13 +54,17 @@ async function openPgnTab() {
     if (!pgnTab) {
         var headerElements = document.querySelectorAll(
             ".share-menu-dialog-component header *") || document;
-        var pgnTab = Array.from(headerElements).filter(
+        pgnTab = Array.from(headerElements).filter(
             (x) => x.textContent == "PGN")[0];
     }
-    return new Promise((resolve, reject) => {
-        pgnTab.click();
-        setTimeout(resolve, 500);
-    });
+    if (pgnTab) {
+        return new Promise((resolve, reject) => {
+            pgnTab.click();
+            setTimeout(resolve, 500);
+        });
+    } else {
+        return Promise.reject();
+    }
 }
 
 async function openShareDialog() {
@@ -66,9 +76,7 @@ async function openShareDialog() {
     if (shareButton) {
         return new Promise((resolve, reject) => {
             shareButton.click()
-            setTimeout(() => {
-                resolve();
-            }, 500);
+            setTimeout(resolve, 500);
         });
     } else {
         return Promise.reject();

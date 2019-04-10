@@ -48,6 +48,12 @@ function getGameId(url) {
         return url.slice(refIndex + 'live/game/'.length);
     }
 
+    // chesstempo.com
+    var refIndex = url.indexOf('chesstempo.com/gamedb/game/');
+    if (refIndex >= 0) {
+        return url.slice(refIndex + 'chesstempo.com/gamedb/game/'.length).split('/')[0];
+    }
+    
     // live chess.com game
     refIndex = url.indexOf('#');
     var ref = refIndex >= 0 ? url.slice(refIndex + 1) : '';
@@ -99,8 +105,9 @@ chrome.pageAction.onClicked.addListener(async function(tab) {
             .done(onDone);
     } else if (isChessTempo(tab.url)) {
         // chesstempo.com
+        var gameId = getGameId(tab.url);
         var results = await chrome.tabs.executeAsyncFunction(tab.id,
-            'getCurrentPgn_chessTempo');
+            'getCurrentPgn_chessTempo', gameId);
         onDone(results);            
     } else if (isChessDB(tab.url)) {
         // chess-db.com
