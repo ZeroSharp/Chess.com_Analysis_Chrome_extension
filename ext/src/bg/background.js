@@ -67,7 +67,10 @@ chrome.pageAction.onClicked.addListener(async function(tab) {
     var onDone = function(pgn, b, c) {
         if (!pgn)
             return;
-        if (tab.url.indexOf("live#a=") > -1 || (pgn.indexOf('[Result ') > -1 && pgn.indexOf('[Result "*"]') < 0)) {
+        if (tab.url.indexOf("live#a=") > -1 || 
+            (pgn.indexOf('[Result ') > -1 && pgn.indexOf('[Result "*"]') < 0) ||
+            (pgn.indexOf('[Result "*"]') > -1 && pgn.indexOf(' won on time') > -1)) // chess.com oddity where games can be lost on time but Result is not updated
+        {
             chrome.tabs.create({
                 url: "http://" + chrome.i18n.getMessage("locale") + ".lichess.org/paste"
             }, function(tab) {
