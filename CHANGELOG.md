@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 3.1.0
+* Updated for recent changes to chess.com.
+
 ## Version 3.0.1
 * Workaround for chess.com bug where the 'result' field in the pgn is not updated after a player times out.
 

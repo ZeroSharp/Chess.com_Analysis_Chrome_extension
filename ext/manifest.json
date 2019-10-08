@@ -1,6 +1,6 @@
 {
   "name": "Chess.com Analysis at Lichess",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "manifest_version": 2,
   "description": "Opens PGN of a game from chess.com or chessgames.com in lichess.org analysis",
   "homepage_url": "http://www.zerosharp.com",
@@ -44,6 +44,7 @@
           ],
       "matches": [
         "https://www.chess.com/live",
+        "https://www.chess.com/play/computer",
         "https://www.chess.com/live/game/*",
         "https://www.chess.com/daily/game/*",
         "http://www.chessgames.com/perl/chessgame*",
