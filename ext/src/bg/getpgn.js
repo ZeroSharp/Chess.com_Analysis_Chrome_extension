@@ -1,5 +1,6 @@
 // chess.com
 async function getCurrentPgn_chessCom() { 
+    debuglog("getCurrentPgn_chessCom");
     var pgn = await openShareDialog()
             .then(openPgnTab)
             .then(copyPgn)
@@ -49,6 +50,7 @@ async function getCurrentPgn_chessTempo(gameId) {
 }
 
 async function openPgnTab() {
+    debuglog("openPgnTab");    
     var pgnDiv = document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-gif-component') ||
         document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component')
     console.log(pgnDiv)    
@@ -83,6 +85,7 @@ async function openShareDialog() {
         document.querySelector('button.share-button-component.share') ||
         document.querySelector("#shareMenuButton") ||
         document.querySelector(".icon-font-chess.share.icon-font-primary") ||
+        document.querySelector(".icon-font-chess.share") ||        
         document.querySelector(".icon-share");
     if (shareButton) {
         return new Promise((resolve, reject) => {
@@ -111,6 +114,7 @@ function closeShareDialog() {
 }
 
 function copyPgn() {
+    debuglog("copyPgn");    
     var pgnDiv = document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-gif-component') ||
         document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component')
     if (pgnDiv) {
