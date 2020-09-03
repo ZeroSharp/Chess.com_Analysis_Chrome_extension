@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 3.3.0 - 2020-09-03
+* Support for the new url format on chess.com. (Thanks mhssmnn!)
+
 ## Version 3.2.0 - 2019-12-20
 * Updated for recent changes to chess.com.
 
