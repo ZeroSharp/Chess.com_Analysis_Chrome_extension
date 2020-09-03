@@ -46,6 +46,7 @@
         "https://www.chess.com/live",
         "https://www.chess.com/play/computer",
         "https://www.chess.com/live/game/*",
+        "https://www.chess.com/game/live/*",
         "https://www.chess.com/daily/game/*",
         "http://www.chessgames.com/perl/chessgame*",
         "https://chess-db.com/public/game.jsp*",
