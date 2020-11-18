@@ -163,7 +163,7 @@ function popuptoast(message) {
 
 function debuglog(message) 
 {
-    var logDebugMessages = true;
+    var logDebugMessages = false;
     if (logDebugMessages) {
         console.log(message);
     }
