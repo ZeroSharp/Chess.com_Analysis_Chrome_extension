@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 3.5.0 - 2020-11-17
+* Now works from the chess.com analysis pages.
+* Updated for recent changes to chess.com. (Thanks danickfort!)
+
 ## Version 3.4.0 - 2020-09-19
 * Fixed problems related to url changes in chess.com and chesstempo.com.
 

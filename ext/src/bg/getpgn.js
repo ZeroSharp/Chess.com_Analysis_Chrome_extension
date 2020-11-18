@@ -1,6 +1,7 @@
 // chess.com
 async function getCurrentPgn_chessCom() { 
     debuglog("getCurrentPgn_chessCom");
+
     var pgn = await openShareDialog()
             .then(openPgnTab)
             .then(copyPgn)
@@ -51,14 +52,11 @@ async function getCurrentPgn_chessTempo(gameId) {
 
 async function openPgnTab() {
     debuglog("openPgnTab");    
-    var pgnDiv = document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-gif-component') ||
+    var pgnDiv = document.querySelector('div.share-menu-tab-selector-component > div:nth-child(1)') ||
         document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component')
-    console.log(pgnDiv)    
+
     if (pgnDiv) {
-        pgn = pgnDiv.attributes["pgn"]
-        if (pgn) {
-            return Promise.resolve();
-        }
+        return Promise.resolve();
     }
     var pgnTab = document.querySelector("#live_ShareMenuGlobalDialogDownloadButton") ||
         document.querySelector(".icon-font-chess.download.icon-font-primary") ||
@@ -82,6 +80,7 @@ async function openPgnTab() {
 async function openShareDialog() {
     debuglog("openShareDialog");
     var shareButton = document.querySelector('button.share-button-component.icon-share') ||
+        document.querySelector('button.icon-font-chess.share.live-game-buttons-button') ||
         document.querySelector('button.share-button-component.share') ||
         document.querySelector("#shareMenuButton") ||
         document.querySelector(".icon-font-chess.share.icon-font-primary") ||
@@ -113,29 +112,46 @@ function closeShareDialog() {
     }
 }
 
-function copyPgn() {
+async function copyPgn() {
     debuglog("copyPgn");    
+
     var pgnDiv = document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-gif-component') ||
-        document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component')
+    document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component')
+
     if (pgnDiv) {
         pgnAttr = pgnDiv.attributes["pgn"]
         if (pgnAttr) {
-            return pgnAttr.value;
+            return Promise.resolve(pgnAttr.value);
         }
     }
+
+    // pgn with embedded analysis is not parsed correctly by lichess, so uncheck the checkbox
+    var analysisCheckbox = document.querySelector('label.share-menu-tab-pgn-toggle[title|="Analyzed PGN"]');
+    debuglog("found analysis checkbox");    
+    if (analysisCheckbox && analysisCheckbox.children[0]) {
+        if (analysisCheckbox.children[0].checked) {
+            await new Promise((resolve, reject) => {
+                analysisCheckbox.click(); 
+                setTimeout(resolve, 500);
+                debuglog("unchecked analysis checkbox");
+            });    
+        }
+    }
+
     var textarea = 
-        document.querySelector("#live_ShareMenuPgnContentTextareaId") ||
-        document.querySelector("textarea[name=pgn]") ||
-        document.querySelector(".form-textarea-component.pgn-download-textarea") ||
-        document.querySelector("#chessboard_ShareMenuPgnContentTextareaId");
-    
+    document.querySelector("#live_ShareMenuPgnContentTextareaId") ||
+    document.querySelector("textarea[name=pgn]") ||
+    document.querySelector(".form-textarea-component.pgn-download-textarea") ||
+    document.querySelector("#chessboard_ShareMenuPgnContentTextareaId");
+
     if (textarea) {
         debuglog(textarea.value);
     } else
     {
         debuglog("textarea failed");
+        Promise.reject();
     }
-    return textarea.value;
+    return Promise.resolve(textarea.value);
 }
 
 function popuptoast(message) {
@@ -147,7 +163,7 @@ function popuptoast(message) {
 
 function debuglog(message) 
 {
-    var logDebugMessages = false;
+    var logDebugMessages = true;
     if (logDebugMessages) {
         console.log(message);
     }
