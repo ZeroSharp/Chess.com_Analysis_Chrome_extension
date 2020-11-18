@@ -162,6 +162,10 @@ var filter = {
         // chesstempo.com
         hostEquals: 'chesstempo.com',
         pathContains: 'gamedb/game'
+    }, {
+        // old.chesstempo.com
+        hostEquals: 'old.chesstempo.com',
+        pathContains: 'gamedb/game'
     }]
 };
 

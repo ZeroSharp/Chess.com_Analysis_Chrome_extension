@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 3.4.0 - 2020-09-19
+* Fixed problems related to url changes in chess.com and chesstempo.com.
+
 ## Version 3.3.0 - 2020-09-03
 * Support for the new url format on chess.com. (Thanks mhssmnn!)
 
