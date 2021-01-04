@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 3.6.0 - 2021-01-04
+* Upgraded to jQuery 3.5.1.
+
 ## Version 3.5.0 - 2020-11-17
 * Now works from the chess.com analysis pages.
 * Updated for recent changes to chess.com. (Thanks danickfort!)
