@@ -125,17 +125,18 @@ async function copyPgn() {
         }
     }
 
-    // pgn with embedded analysis is not parsed correctly by lichess, so uncheck the checkbox
-    var analysisCheckbox = document.querySelector('label.share-menu-tab-pgn-toggle[title|="Analyzed PGN"]');
-    debuglog("found analysis checkbox");    
-    if (analysisCheckbox && analysisCheckbox.children[0]) {
-        if (analysisCheckbox.children[0].checked) {
-            await new Promise((resolve, reject) => {
-                analysisCheckbox.click(); 
-                setTimeout(resolve, 500);
-                debuglog("unchecked analysis checkbox");
-            });    
-        }
+    // pgn with embedded analysis is not parsed correctly by lichess, so disable it
+    var disableAnalysisRadioButton =
+        document.querySelector('.share-menu-tab-pgn-toggle[title="Annotation"] input[type=radio]');
+    if (disableAnalysisRadioButton) {
+        debuglog("found disable analysis radio button");
+        await new Promise((resolve, reject) => {
+            disableAnalysisRadioButton.click();
+            setTimeout(resolve, 500);
+            debuglog("analysis disabled");
+        });
+    } else {
+        debuglog("could not find disable analysis radio button!");
     }
 
     var textarea = 
