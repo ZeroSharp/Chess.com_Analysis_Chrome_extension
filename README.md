@@ -4,7 +4,7 @@
 
 * Uploads any finished game on chess.com, chess-db.com, chesstempo.com or chessgames.com for lichess analysis. 
 * Works from the game archive as well as from finished live games.
-* Automatically toggles the new 'computer analysis' check box on the lichess.org import page.
+* Automatically toggles the 'computer analysis' check box on the lichess.org import page.
 
 The extension can be downloaded here: https://chrome.google.com/webstore/detail/bhjlkimpkkgkmfjlcfngmakenalgleap
 

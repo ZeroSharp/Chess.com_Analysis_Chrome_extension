@@ -1,6 +1,7 @@
 # Changelog
 
-## Version 3.6.0 - 2021-01-04
+## Version 3.6.0 - 2021-02-06
+* Fixed for chess.com analysis pages. (Thanks Johannes!)
 * Upgraded to jQuery 3.5.1.
 
 ## Version 3.5.0 - 2020-11-17
