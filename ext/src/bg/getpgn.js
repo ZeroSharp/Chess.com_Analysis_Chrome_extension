@@ -102,7 +102,8 @@ function closeShareDialog() {
     var closeButton = 
         document.querySelector("#live_ShareMenuGlobalDialogCloseButton") || 
         document.querySelector(".icon-font-chess.x.icon-font-primary") || 
-        document.querySelector(".icon-font-chess.x.icon-font-secondary") ||
+        document.querySelector(".icon-font-chess.x.icon-font-secondary") || 
+        document.querySelector(".icon-font-chess.x.ui_outside-close-icon") ||
         document.querySelector("#chessboard_ShareMenuGlobalDialogCloseButton")    
     if (closeButton) {
         closeButton.click();

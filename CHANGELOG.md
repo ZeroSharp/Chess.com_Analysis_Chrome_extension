@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 3.7.0 - 2021-07-29
+* Fixed for chess.com daily games
+* Now works from chess.com event pages 
+
 ## Version 3.6.0 - 2021-02-06
 * Fixed for chess.com analysis pages. (Thanks Johannes!)
 * Upgraded to jQuery 3.5.1.

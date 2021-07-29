@@ -48,6 +48,12 @@ function getGameId(url) {
         return url.slice(refIndex + 'live/game/'.length);
     }
 
+    // daily chess.com game v3
+    refIndex = url.indexOf('game/daily/');
+    if (refIndex >= 0) {
+        return url.slice(refIndex + 'game/daily/'.length);
+    }
+    
     // chesstempo.com
     var refIndex = url.indexOf('chesstempo.com/gamedb/game/');
     if (refIndex >= 0) {
@@ -145,7 +151,11 @@ var filter = {
     }, {
         // daily game v3
         hostEquals: 'www.chess.com',
-        pathContains: 'daily/game'
+        pathContains: 'game/daily'
+    }, {
+        // events v3
+        hostEquals: 'www.chess.com',
+        pathContains: 'events'
     }, {
         // chessgames.com
         hostEquals: 'www.chessgames.com',
