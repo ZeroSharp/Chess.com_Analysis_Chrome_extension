@@ -82,6 +82,7 @@ async function openShareDialog() {
     var shareButton = document.querySelector('button.share-button-component.icon-share') ||
         document.querySelector('button.icon-font-chess.share.live-game-buttons-button') ||
         document.querySelector('button.share-button-component.share') ||
+        document.querySelector("button[data-test='download']") ||
         document.querySelector("#shareMenuButton") ||
         document.querySelector(".icon-font-chess.share.icon-font-primary") ||
         document.querySelector(".icon-font-chess.share") ||        
@@ -99,10 +100,11 @@ async function openShareDialog() {
 
 function closeShareDialog() {
     debuglog("closeShareDialog");
-    var closeButton = 
-        document.querySelector("#live_ShareMenuGlobalDialogCloseButton") || 
-        document.querySelector(".icon-font-chess.x.icon-font-primary") || 
-        document.querySelector(".icon-font-chess.x.icon-font-secondary") || 
+    var closeButton =
+        document.querySelector("#live_ShareMenuGlobalDialogCloseButton") ||
+        document.querySelector("button.ui_outside-close-component") ||
+        document.querySelector(".icon-font-chess.x.icon-font-primary") ||
+        document.querySelector(".icon-font-chess.x.icon-font-secondary") ||
         document.querySelector(".icon-font-chess.x.ui_outside-close-icon") ||
         document.querySelector("#chessboard_ShareMenuGlobalDialogCloseButton")    
     if (closeButton) {
