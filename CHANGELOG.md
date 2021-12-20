@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 3.8.0 - 2021-12-20
+* Fixed for chess.com with download button (Thanks guidezpl!)
+
 ## Version 3.7.0 - 2021-07-29
 * Fixed for chess.com daily games
 * Now works from chess.com event pages 
