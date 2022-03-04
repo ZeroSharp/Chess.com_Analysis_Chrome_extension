@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 3.8.1 - 2022-03-04
+* Prevented chess.com analysis from being sent to lichess. (Thanks russelldavis!)
+
 ## Version 3.8.0 - 2021-12-20
 * Fixed for chess.com with download button (Thanks guidezpl!)
 
