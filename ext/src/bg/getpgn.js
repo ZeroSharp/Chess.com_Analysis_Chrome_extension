@@ -128,9 +128,11 @@ async function copyPgn() {
         }
     }
 
-    // pgn with embedded analysis is not parsed correctly by lichess, so disable it
+    // PGN with embedded analysis is not parsed correctly by lichess, so disable it.
+    // Note: both radio buttons match this selector (there's nothing unique in the markup).
+    // We're relying on the "Annotation" button being the first one, which is what querySelector gives us.
     var disableAnalysisRadioButton =
-        document.querySelector('.share-menu-tab-pgn-toggle[title="Annotation"] input[type=radio]');
+        document.querySelector('.share-menu-tab-pgn-toggle input[type=radio]');
     if (disableAnalysisRadioButton) {
         debuglog("found disable analysis radio button");
         await new Promise((resolve, reject) => {
