@@ -90,7 +90,7 @@ async function openShareDialog() {
     if (shareButton) {
         return new Promise((resolve, reject) => {
             shareButton.click()
-            setTimeout(resolve, 500);
+            setTimeout(resolve, 1000);
         });
     } else {
         debuglog("failed openShareDialog");
