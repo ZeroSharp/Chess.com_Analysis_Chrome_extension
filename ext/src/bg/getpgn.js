@@ -1,3 +1,20 @@
+pgnFuncs = {
+    chessCom: getCurrentPgn_chessCom,
+    chessDB: getCurrentPgn_chessDB,
+    chessTempo: getCurrentPgn_chessTempo,
+};
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action !== "getPgn") return false;
+    pgnFunc = pgnFuncs[request.site];
+    if (!pgnFunc) throw new Error(`Invalid site in getPgn message data: ${request.site}`);
+    pgnFunc(...(request.actionArgs || []))
+      .then(sendResponse)
+      .catch((error) => console.error(error));
+    return true;
+});
+
+
 // chess.com
 async function getCurrentPgn_chessCom() { 
     debuglog("getCurrentPgn_chessCom");
