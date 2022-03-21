@@ -96,7 +96,9 @@ async function openPgnTab() {
 
 async function openShareDialog() {
     debuglog("openShareDialog");
-    var shareButton = document.querySelector('button.share-button-component.icon-share') ||
+    var shareButton =
+        document.querySelector(".icon-font-chess.download") ||
+        document.querySelector('button.share-button-component.icon-share') ||
         document.querySelector('button.icon-font-chess.share.live-game-buttons-button') ||
         document.querySelector('button.share-button-component.share') ||
         document.querySelector("button[data-test='download']") ||
