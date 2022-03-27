@@ -1,6 +1,6 @@
 {
   "name": "Chess.com Analysis at Lichess",
-  "version": "3.8.1",
+  "version": "4.0.0",
   "manifest_version": 3,
   "description": "Opens PGN of a game from chess.com or chessgames.com in lichess.org analysis",
   "homepage_url": "http://www.zerosharp.com",
@@ -48,7 +48,8 @@
         "http://www.chessgames.com/perl/chessgame*",
         "https://chess-db.com/public/game.jsp*",
         "https://chesstempo.com/gamedb/*/*",
-        "https://old.chesstempo.com/gamedb/*/*"
+        "https://old.chesstempo.com/gamedb/*/*",
+        "https://old.chesstempo.com/game-database.html"
       ]
     }
   ],

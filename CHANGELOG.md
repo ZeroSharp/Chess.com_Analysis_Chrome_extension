@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 4.0.0 - 2022-03-27
+* Migrated to Chrome manifest v3. (Thanks russelldavis!)
+* Improved support for chesstempo.com.
+
 ## Version 3.8.1 - 2022-03-04
 * Prevented chess.com analysis from being sent to lichess. (Thanks russelldavis!)
 
