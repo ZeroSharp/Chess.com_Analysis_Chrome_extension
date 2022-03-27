@@ -69,16 +69,17 @@ function getGameId(url) {
     return '';
 }
 
-chrome.pageAction.onClicked.addListener(async function(tab) {
-    var onDone = function(pgn, b, c) {
+chrome.action.onClicked.addListener(async function(tab) {
+    var onDone = function(pgn) {
         if (!pgn)
             return;
         if (tab.url.indexOf("live#a=") > -1 || 
             (pgn.indexOf('[Result ') > -1 && pgn.indexOf('[Result "*"]') < 0) ||
             (pgn.indexOf('[Result "*"]') > -1 && pgn.indexOf(' won on time') > -1)) // chess.com oddity where games can be lost on time but Result is not updated
         {
+            let tabId;
             chrome.tabs.create({
-                url: "http://" + chrome.i18n.getMessage("locale") + ".lichess.org/paste"
+                url: "http://" + chrome.i18n.getUILanguage().split('-')[0] + ".lichess.org/paste"
             }, function(tab) {
                 tabId = tab.id;
             });
@@ -115,74 +116,19 @@ chrome.pageAction.onClicked.addListener(async function(tab) {
     } else if (isChessTempo(tab.url)) {
         // chesstempo.com
         var gameId = getGameId(tab.url);
-        var results = await chrome.tabs.executeAsyncFunction(tab.id,
-            'getCurrentPgn_chessTempo', gameId);
+        var results = await getPgn(tab.id, "chessTempo", gameId);
         onDone(results);            
     } else if (isChessDB(tab.url)) {
         // chess-db.com
-        var results = await chrome.tabs.executeAsyncFunction(tab.id,
-            'getCurrentPgn_chessDB');
+        var results = await getPgn(tab.id, "chessDB");
         onDone(results);    
     } else {
         // chess.com
-        var results = await chrome.tabs.executeAsyncFunction(tab.id,
-            'getCurrentPgn_chessCom');
+        var results = await getPgn(tab.id, "chessCom");
         onDone(results);
     }    
 });
 
-// Base filter
-var filter = {
-    url: [{ // archived game v2
-        hostEquals: 'www.chess.com',
-        pathContains: 'livechess/game'
-    }, {
-        // archived game v3
-        hostEquals: 'www.chess.com',
-        pathContains: 'live/game'
-    }, {
-        // live game v3
-        hostEquals: 'www.chess.com',
-        pathContains: 'live'
-    }, {
-        // computer game v3
-        hostEquals: 'www.chess.com',
-        pathContains: 'play'
-    }, {
-        // daily game v3
-        hostEquals: 'www.chess.com',
-        pathContains: 'game/daily'
-    }, {
-        // events v3
-        hostEquals: 'www.chess.com',
-        pathContains: 'events'
-    }, {
-        // chessgames.com
-        hostEquals: 'www.chessgames.com',
-        pathContains: 'perl/chessgame'
-    }, {
-        // chess-db.com
-        hostEquals: 'chess-db.com',
-        pathContains: 'public/game.jsp'
-    }, {
-        // chesstempo.com
-        hostEquals: 'chesstempo.com',
-        pathContains: 'gamedb/player'
-    }, {
-        // chesstempo.com
-        hostEquals: 'chesstempo.com',
-        pathContains: 'gamedb/game'
-    }, {
-        // old.chesstempo.com
-        hostEquals: 'old.chesstempo.com',
-        pathContains: 'gamedb/game'
-    }]
-};
-
-function onWebNav(details) {
-    chrome.pageAction.show(details.tabId);
+async function getPgn(tabId, site, ...args) {
+    return await chrome.tabs.sendMessage(tabId, {action: "getPgn", site, actionArgs: args});
 }
-
-chrome.webNavigation.onCommitted.addListener(onWebNav, filter);
-chrome.webNavigation.onHistoryStateUpdated.addListener(onWebNav, filter);
-chrome.webNavigation.onReferenceFragmentUpdated.addListener(onWebNav, filter);

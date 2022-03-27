@@ -1,3 +1,20 @@
+pgnFuncs = {
+    chessCom: getCurrentPgn_chessCom,
+    chessDB: getCurrentPgn_chessDB,
+    chessTempo: getCurrentPgn_chessTempo,
+};
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action !== "getPgn") return false;
+    pgnFunc = pgnFuncs[request.site];
+    if (!pgnFunc) throw new Error(`Invalid site in getPgn message data: ${request.site}`);
+    pgnFunc(...(request.actionArgs || []))
+      .then(sendResponse)
+      .catch((error) => console.error(error));
+    return true;
+});
+
+
 // chess.com
 async function getCurrentPgn_chessCom() { 
     debuglog("getCurrentPgn_chessCom");
@@ -79,7 +96,9 @@ async function openPgnTab() {
 
 async function openShareDialog() {
     debuglog("openShareDialog");
-    var shareButton = document.querySelector('button.share-button-component.icon-share') ||
+    var shareButton =
+        document.querySelector(".icon-font-chess.download") ||
+        document.querySelector('button.share-button-component.icon-share') ||
         document.querySelector('button.icon-font-chess.share.live-game-buttons-button') ||
         document.querySelector('button.share-button-component.share') ||
         document.querySelector("button[data-test='download']") ||
@@ -90,7 +109,7 @@ async function openShareDialog() {
     if (shareButton) {
         return new Promise((resolve, reject) => {
             shareButton.click()
-            setTimeout(resolve, 500);
+            setTimeout(resolve, 1000);
         });
     } else {
         debuglog("failed openShareDialog");
