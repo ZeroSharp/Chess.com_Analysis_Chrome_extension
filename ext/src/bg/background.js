@@ -85,16 +85,14 @@ chrome.action.onClicked.addListener(async function(tab) {
             });
             chrome.tabs.onUpdated.addListener(function(id, info) {
                 setTimeout(() => {
-                    if (id == tabId && info.status == "complete" && pgn != null) {
+                    if (id == tabId && info.status == "complete" && info.status != "aborted" && pgn != null) {
                         chrome.tabs.sendMessage(tabId, pgn);
                         pgn = null;
                     }
                 }, 100);
             });
         } else {
-            chrome.tabs.executeScript(tab.id, {
-                code: 'popuptoast("Game is not yet finished.");'
-            });
+            return notFinished(tab.id);
         }
     };
     // if v2
@@ -132,3 +130,9 @@ chrome.action.onClicked.addListener(async function(tab) {
 async function getPgn(tabId, site, ...args) {
     return await chrome.tabs.sendMessage(tabId, {action: "getPgn", site, actionArgs: args});
 }
+
+async function notFinished(tabId, site, ...args)
+{
+    return await chrome.tabs.sendMessage(tabId, {action: "notFinished", site, actionArgs: args});
+}
+

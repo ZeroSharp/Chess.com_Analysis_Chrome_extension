@@ -5,12 +5,21 @@ pgnFuncs = {
 };
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action !== "getPgn") return false;
+    if (request.action === "notFinished") {
+        popuptoast("Game is not yet finished.")
+        .then(sendResponse);
+        return true;
+    }
+    
+    if (request.action !== "getPgn") {
+        return false;
+    }
+
     pgnFunc = pgnFuncs[request.site];
     if (!pgnFunc) throw new Error(`Invalid site in getPgn message data: ${request.site}`);
     pgnFunc(...(request.actionArgs || []))
       .then(sendResponse)
-      .catch((error) => console.error(error));
+      .catch((error) => { if (error) console.error(error); });
     return true;
 });
 
@@ -51,6 +60,18 @@ async function getCurrentPgn_chessDB() {
 
 // chessTempo.com
 async function getCurrentPgn_chessTempo(gameId) { 
+    debuglog('getCurrentPgn_chessTempo(' + gameId + ')');
+    if (!gameId || gameId === '') {
+        // if the gameId is not defined, try to get it from the link
+        var url = $('a:contains("Link")').attr('href');
+        // debuglog("After url = " + url);
+        var refIndex = url.indexOf('gamedb/game/');
+        if (refIndex >= 0) {
+            gameId = url.slice(refIndex + 'gamedb/game/'.length).split('/')[0];
+        }
+        debuglog("gameId = " + gameId);
+    }
+
     var pgn = await $.ajax({        
         url: $('form.ct-download-pgn-form')[0].action,
         type: 'POST',
@@ -179,11 +200,12 @@ async function copyPgn() {
     return Promise.resolve(textarea.value);
 }
 
-function popuptoast(message) {
+async function popuptoast(message) {
     var toastMessage = $('<div class="popuptoast" style="display:none">' + message + '</div>');
 
     $(document.body).append(toastMessage);
     toastMessage.stop().fadeIn(400).delay(2000).fadeOut(400); //fade out after 2 seconds
+    return Promise.resolve();
 }
 
 function debuglog(message) 
