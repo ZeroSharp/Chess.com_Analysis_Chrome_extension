@@ -2,6 +2,7 @@ pgnFuncs = {
     chessCom: getCurrentPgn_chessCom,
     chessDB: getCurrentPgn_chessDB,
     chessTempo: getCurrentPgn_chessTempo,
+    chessGames: getCurrentPgn_chessGames
 };
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -16,11 +17,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 
     pgnFunc = pgnFuncs[request.site];
-    if (!pgnFunc) throw new Error(`Invalid site in getPgn message data: ${request.site}`);
+    if (!pgnFunc) {
+        throw new Error(`Invalid site in getPgn message data: ${request.site}`);
+    }
+
     pgnFunc(...(request.actionArgs || []))
-      .then(sendResponse)
-      .catch((error) => { if (error) console.error(error); });
-    return true;
+      .then(sendResponse);
+
+    return true;  
 });
 
 
@@ -44,6 +48,14 @@ async function getCurrentPgn_chessCom() {
         return Promise.resolve(pgn);
     }
     return Promise.reject();
+}
+
+// chessGames.com
+async function getCurrentPgn_chessGames(gameId) {
+    debuglog('getCurrentPgn_chessGames(' + gameId + ')');
+    var pgnUrl = 'https://www.chessgames.com/perl/nph-chesspgn?text=1&gid=' + gameId;
+    pgn = await $.get(pgnUrl);
+    return Promise.resolve(pgn);
 }
 
 // chess-db.com
@@ -118,7 +130,6 @@ async function openPgnTab() {
 async function openShareDialog() {
     debuglog("openShareDialog");
     var shareButton =
-        document.querySelector(".icon-font-chess.download") ||
         document.querySelector('button.share-button-component.icon-share') ||
         document.querySelector('button.icon-font-chess.share.live-game-buttons-button') ||
         document.querySelector('button.share-button-component.share') ||

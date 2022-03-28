@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 4.0.1 - 2022-03-28
+* Fixed for change to chess.com download button.
+* Chrome manifest v3 does not support jQuery calls from background. Refactored.
+* Fixed chessgames.com support which now requires https.
+
 ## Version 4.0.0 - 2022-03-27
 * Migrated to Chrome manifest v3. (Thanks russelldavis!)
 * Improved support for chesstempo.com.

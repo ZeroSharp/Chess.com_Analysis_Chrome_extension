@@ -9,7 +9,7 @@ function isChessComVersion2(url) {
 }
 
 function isChessGames(url) {
-    if (url.indexOf('www.chessgames.com') >= 0) {
+    if (url.indexOf('chessgames.com') >= 0) {
         return true;
     }
     return false;
@@ -34,12 +34,6 @@ function getGameId(url) {
     var refIndex = url.indexOf('chessgame?gid=');
     if (refIndex >= 0) {
         return url.slice(refIndex + 'chessgame?gid='.length);
-    }
-    
-    // archived chess.com game v2
-    var refIndex = url.indexOf('livechess/game?id=');
-    if (refIndex >= 0) {
-        return url.slice(refIndex + 'livechess/game?id='.length);
     }
 
     // archived chess.com game v3
@@ -95,22 +89,11 @@ chrome.action.onClicked.addListener(async function(tab) {
             return notFinished(tab.id);
         }
     };
-    // if v2
-    if (isChessComVersion2(tab.url)) {
-        // chess.com v2 (obsolete)
-        var gameId = getGameId(tab.url);
-        var pgnUrl = 'https://www.chess.com/echess/download_pgn?lid=' + gameId;
-        // this URL does not work from v3.
-
-        $.get(pgnUrl)
-            .done(onDone);
-    } else if (isChessGames(tab.url)) {
+    if (isChessGames(tab.url)) {
         // chessgames.com
-        var gameId = getGameId(tab.url);        
-        var pgnUrl = 'http://www.chessgames.com/perl/nph-chesspgn?text=1&gid=' + gameId;
-    
-        $.get(pgnUrl)
-            .done(onDone);
+        var gameId = getGameId(tab.url);            
+        var results = await getPgn(tab.id, "chessGames", gameId);
+        onDone(results);            
     } else if (isChessTempo(tab.url)) {
         // chesstempo.com
         var gameId = getGameId(tab.url);
@@ -124,7 +107,7 @@ chrome.action.onClicked.addListener(async function(tab) {
         // chess.com
         var results = await getPgn(tab.id, "chessCom");
         onDone(results);
-    }    
+    }
 });
 
 async function getPgn(tabId, site, ...args) {
