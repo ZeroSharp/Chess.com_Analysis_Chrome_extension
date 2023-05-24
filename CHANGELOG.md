@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 4.0.3 - 2023-05-24
+* Fixed support for archived games against computers.
+
 ## Version 4.0.2 - 2022-04-17
 * Fixed for change to chess.com download button.
 
