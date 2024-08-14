@@ -243,7 +243,6 @@ function injectButton(buttonsContainer) {
 
     button.onclick = function() {
         chrome.runtime.sendMessage(chrome.runtime.id, {
-            id: chrome.runtime.id,
             action: "openReview"
         })
     };
