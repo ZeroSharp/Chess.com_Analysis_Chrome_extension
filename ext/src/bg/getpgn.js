@@ -228,3 +228,44 @@ function debuglog(message)
         console.log(message);
     }
 }
+
+function injectButton(buttonsContainer) {
+    if(buttonsContainer.querySelector(".lichess-review-button")) {
+        return;
+    }
+
+    var button = document.createElement("button");
+    button.innerHTML = `
+        <span class="lichess-review-button__icon"></span>
+        <span class="lichess-review-button__text">Game Review</span>
+    `
+    button.className = "lichess-review-button";
+
+    button.onclick = function() {
+        chrome.runtime.sendMessage(chrome.runtime.id, {
+            id: chrome.runtime.id,
+            action: "openReview"
+        })
+    };
+
+    buttonsContainer.appendChild(button);
+}
+
+function observeDOM() {
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            var buttonsContainer = document.querySelector(".game-review-buttons-component");
+
+            if (buttonsContainer) {
+                injectButton(buttonsContainer);
+                observer.disconnect();
+            }
+        });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+}
+
+if (window.location.origin === "https://www.chess.com") {
+    observeDOM()
+}

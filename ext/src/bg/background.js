@@ -53,7 +53,7 @@ function getGameId(url) {
     return '';
 }
 
-chrome.action.onClicked.addListener(async function(tab) {
+async function runAnalysis(tab) {
     var onDone = function(pgn) {
         if (!pgn)
             return;
@@ -98,7 +98,7 @@ chrome.action.onClicked.addListener(async function(tab) {
         var results = await getPgn(tab.id, "chessCom");
         onDone(results);
     }
-});
+}
 
 async function getPgn(tabId, site, ...args) {
     return await chrome.tabs.sendMessage(tabId, {action: "getPgn", site, actionArgs: args});
@@ -108,3 +108,15 @@ async function notFinished(tabId, site, ...args)
 {
     return await chrome.tabs.sendMessage(tabId, {action: "notFinished", site, actionArgs: args});
 }
+
+// Here we handle click on the pinned extension icon
+chrome.action.onClicked.addListener(async function(tab) {
+    await runAnalysis(tab);
+});
+
+// Here we handle click on the injected button
+chrome.runtime.onMessage.addListener(async function(request, sender){
+    if (request.action === "openReview") {
+        await runAnalysis(sender.tab)
+    }
+});

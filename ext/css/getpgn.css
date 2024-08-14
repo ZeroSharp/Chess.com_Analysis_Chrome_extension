@@ -17,3 +17,43 @@
     -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
     box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
 }
+
+.lichess-review-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 22px;
+    white-space: nowrap;
+
+    border-radius: 5px;
+    border: 0;
+    outline: none;
+
+    background-color: #33312e;
+
+    font-family: -apple-system, "system-ui", "Segoe UI", system-ui, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #949494;
+}
+
+.lichess-review-button:hover {
+    background-color: #44413b;
+}
+
+.lichess-review-button__icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    margin-right: 8px;
+    flex-shrink: 0;
+
+    background-image: url('chrome-extension://__MSG_@@extension_id__/icons/lichess_logo.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.lichess-review-button__text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
