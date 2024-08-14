@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         .then(sendResponse);
         return true;
     }
-    
+
     if (request.action !== "getPgn") {
         return false;
     }
@@ -24,12 +24,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     pgnFunc(...(request.actionArgs || []))
       .then(sendResponse);
 
-    return true;  
+    return true;
 });
 
 
 // chess.com
-async function getCurrentPgn_chessCom() { 
+async function getCurrentPgn_chessCom() {
     debuglog("getCurrentPgn_chessCom");
 
     var pgn = await openShareDialog()
@@ -59,7 +59,7 @@ async function getCurrentPgn_chessGames(gameId) {
 }
 
 // chess-db.com
-async function getCurrentPgn_chessDB() { 
+async function getCurrentPgn_chessDB() {
     var pgn = null;
     var pgnInput = $('input[name="pgn"]');
     if (pgnInput)
@@ -71,7 +71,7 @@ async function getCurrentPgn_chessDB() {
 }
 
 // chessTempo.com
-async function getCurrentPgn_chessTempo(gameId) { 
+async function getCurrentPgn_chessTempo(gameId) {
     debuglog('getCurrentPgn_chessTempo(' + gameId + ')');
     if (!gameId || gameId === '') {
         // if the gameId is not defined, try to get it from the link
@@ -84,7 +84,7 @@ async function getCurrentPgn_chessTempo(gameId) {
         debuglog("gameId = " + gameId);
     }
 
-    var pgn = await $.ajax({        
+    var pgn = await $.ajax({
         url: $('form.ct-download-pgn-form')[0].action,
         type: 'POST',
         data : 'gameids=' + gameId,
@@ -101,7 +101,7 @@ async function getCurrentPgn_chessTempo(gameId) {
 }
 
 async function openPgnTab() {
-    debuglog("openPgnTab");    
+    debuglog("openPgnTab");
     var pgnDiv = document.querySelector('div.share-menu-tab-selector-component > div:nth-child(1)') ||
         document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component')
 
@@ -113,7 +113,7 @@ async function openPgnTab() {
         document.querySelector(".icon-download");
     if (!pgnTab) {
         var headerElements = document.querySelectorAll(
-            ".share-menu-dialog-component header *") || document;    
+            ".share-menu-dialog-component header *") || document;
         pgnTab = Array.from(headerElements).filter(
             (x) => x.textContent == "PGN")[0];
     }
@@ -138,7 +138,7 @@ async function openShareDialog() {
         document.querySelector("button[data-test='download']") ||
         document.querySelector("#shareMenuButton") ||
         document.querySelector(".icon-font-chess.share.icon-font-primary") ||
-        document.querySelector(".icon-font-chess.share") ||        
+        document.querySelector(".icon-font-chess.share") ||
         document.querySelector(".icon-share");
     if (shareButton) {
         return new Promise((resolve, reject) => {
@@ -159,7 +159,7 @@ function closeShareDialog() {
         document.querySelector(".icon-font-chess.x.icon-font-primary") ||
         document.querySelector(".icon-font-chess.x.icon-font-secondary") ||
         document.querySelector(".icon-font-chess.x.ui_outside-close-icon") ||
-        document.querySelector("#chessboard_ShareMenuGlobalDialogCloseButton")    
+        document.querySelector("#chessboard_ShareMenuGlobalDialogCloseButton")
     if (closeButton) {
         closeButton.click();
     } else
@@ -169,7 +169,7 @@ function closeShareDialog() {
 }
 
 async function copyPgn() {
-    debuglog("copyPgn");    
+    debuglog("copyPgn");
 
     var pgnDiv = document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-gif-component') ||
     document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component')
@@ -197,7 +197,7 @@ async function copyPgn() {
         debuglog("could not find disable analysis radio button!");
     }
 
-    var textarea = 
+    var textarea =
     document.querySelector("#live_ShareMenuPgnContentTextareaId") ||
     document.querySelector("textarea[name=pgn]") ||
     document.querySelector(".form-textarea-component.pgn-download-textarea") ||
@@ -221,7 +221,7 @@ async function popuptoast(message) {
     return Promise.resolve();
 }
 
-function debuglog(message) 
+function debuglog(message)
 {
     var logDebugMessages = false;
     if (logDebugMessages) {
