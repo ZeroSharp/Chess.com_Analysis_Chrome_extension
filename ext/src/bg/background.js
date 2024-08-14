@@ -1,13 +1,3 @@
-function isChessComVersion2(url) {
-    if (url.indexOf('livechess/game') >= 0) {
-        return true;
-    }
-    if (url.indexOf('live.chess.com') >= 0) {
-        return true;
-    }
-    return false;
-}
-
 function isChessGames(url) {
     if (url.indexOf('chessgames.com') >= 0) {
         return true;
@@ -47,13 +37,13 @@ function getGameId(url) {
     if (refIndex >= 0) {
         return url.slice(refIndex + 'game/daily/'.length);
     }
-    
+
     // chesstempo.com
     var refIndex = url.indexOf('chesstempo.com/gamedb/game/');
     if (refIndex >= 0) {
         return url.slice(refIndex + 'chesstempo.com/gamedb/game/'.length).split('/')[0];
     }
-    
+
     // live chess.com game
     refIndex = url.indexOf('#');
     var ref = refIndex >= 0 ? url.slice(refIndex + 1) : '';
@@ -63,11 +53,11 @@ function getGameId(url) {
     return '';
 }
 
-chrome.action.onClicked.addListener(async function(tab) {
+async function runAnalysis(tab) {
     var onDone = function(pgn) {
         if (!pgn)
             return;
-        if (tab.url.indexOf("live#a=") > -1 || 
+        if (tab.url.indexOf("live#a=") > -1 ||
             (pgn.indexOf('[Result ') > -1 && pgn.indexOf('[Result "*"]') < 0) ||
             (pgn.indexOf('[Result "*"]') > -1 && pgn.indexOf(' won on time') > -1)) // chess.com oddity where games can be lost on time but Result is not updated
         {
@@ -91,24 +81,24 @@ chrome.action.onClicked.addListener(async function(tab) {
     };
     if (isChessGames(tab.url)) {
         // chessgames.com
-        var gameId = getGameId(tab.url);            
+        var gameId = getGameId(tab.url);
         var results = await getPgn(tab.id, "chessGames", gameId);
-        onDone(results);            
+        onDone(results);
     } else if (isChessTempo(tab.url)) {
         // chesstempo.com
         var gameId = getGameId(tab.url);
         var results = await getPgn(tab.id, "chessTempo", gameId);
-        onDone(results);            
+        onDone(results);
     } else if (isChessDB(tab.url)) {
         // chess-db.com
         var results = await getPgn(tab.id, "chessDB");
-        onDone(results);    
+        onDone(results);
     } else {
         // chess.com
         var results = await getPgn(tab.id, "chessCom");
         onDone(results);
     }
-});
+}
 
 async function getPgn(tabId, site, ...args) {
     return await chrome.tabs.sendMessage(tabId, {action: "getPgn", site, actionArgs: args});
@@ -119,3 +109,14 @@ async function notFinished(tabId, site, ...args)
     return await chrome.tabs.sendMessage(tabId, {action: "notFinished", site, actionArgs: args});
 }
 
+// Here we handle click on the pinned extension icon
+chrome.action.onClicked.addListener(async function(tab) {
+    await runAnalysis(tab);
+});
+
+// Here we handle click on the injected button
+chrome.runtime.onMessage.addListener(async function(request, sender){
+    if (request.action === "openReview") {
+        await runAnalysis(sender.tab)
+    }
+});

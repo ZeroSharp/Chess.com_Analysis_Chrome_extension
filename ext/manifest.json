@@ -24,7 +24,7 @@
           "js/jquery-3.5.1.min.js",
           "src/bg/analysis.js"
           ],
-      "matches": [ 
+      "matches": [
         "https://*.lichess.org/paste"
       ]
     },
@@ -67,5 +67,20 @@
   },
   "permissions": [
     "activeTab"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/lichess_logo.svg"
+      ],
+      "matches": [
+        "https://www.chess.com/*",
+        "https://www.chessgames.com/*",
+        "https://chessgames.com/*",
+        "https://chess-db.com/*",
+        "https://chesstempo.com/*",
+        "https://old.chesstempo.com/*"
+      ]
+    }
   ]
 }
