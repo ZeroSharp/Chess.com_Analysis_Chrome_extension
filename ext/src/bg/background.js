@@ -67,7 +67,8 @@ chrome.action.onClicked.addListener(async function(tab) {
     var onDone = function(pgn) {
         if (!pgn)
             return;
-        if (tab.url.indexOf("live#a=") > -1 || 
+        if (tab.url.indexOf("live#a=") > -1 ||
+            tab.url.indexOf("/events/") > -1 || 
             (pgn.indexOf('[Result ') > -1 && pgn.indexOf('[Result "*"]') < 0) ||
             (pgn.indexOf('[Result "*"]') > -1 && pgn.indexOf(' won on time') > -1)) // chess.com oddity where games can be lost on time but Result is not updated
         {

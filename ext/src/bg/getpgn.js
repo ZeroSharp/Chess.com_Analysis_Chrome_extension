@@ -103,7 +103,8 @@ async function getCurrentPgn_chessTempo(gameId) {
 async function openPgnTab() {
     debuglog("openPgnTab");    
     var pgnDiv = document.querySelector('div.share-menu-tab-selector-component > div:nth-child(1)') ||
-        document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component')
+        document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component') ||
+        document.querySelector('div.share-menu-tab.share-menu-tab-image-component');
 
     if (pgnDiv) {
         return Promise.resolve();
@@ -138,6 +139,7 @@ async function openShareDialog() {
         document.querySelector("button[data-test='download']") ||
         document.querySelector("#shareMenuButton") ||
         document.querySelector(".icon-font-chess.share.icon-font-primary") ||
+        document.querySelector(".icon-font-chess.share.game-buttons-icon") ||
         document.querySelector(".icon-font-chess.share") ||        
         document.querySelector(".icon-share");
     if (shareButton) {
@@ -171,8 +173,15 @@ function closeShareDialog() {
 async function copyPgn() {
     debuglog("copyPgn");    
 
+    //share-menu-tab-selector-tab 
+    //board-tab-item-underlined-component 
+    //board-tab-item-underlined-active 
+    //share-menu-tab-selector-tab
+
     var pgnDiv = document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-gif-component') ||
-    document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component')
+    document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component') ||
+    document.querySelector('div.share-menu-tab.share-menu-tab-gif-component') ||
+    document.querySelector('div.share-menu-tab.share-menu-tab-image-component');
 
     if (pgnDiv) {
         pgnAttr = pgnDiv.attributes["pgn"]

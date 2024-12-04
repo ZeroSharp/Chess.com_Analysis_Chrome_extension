@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 4.0.4 - 2024-12-04
+* Fixed for recent changes to chess.com stylesheets.
+* Fixed for world championship games.
+
 ## Version 4.0.3 - 2023-05-24
 * Fixed support for archived games against computers.
 
