@@ -46,6 +46,7 @@
         "https://www.chess.com/game/computer/*",
         "https://www.chess.com/events/*/*",
         "https://www.chess.com/play/online",
+        "https://www.chess.com/game/*",
         "https://www.chessgames.com/perl/chessgame*",
         "https://chessgames.com/perl/chessgame*",
         "https://chess-db.com/public/game.jsp*",
