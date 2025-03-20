@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 4.0.5 - 2025-03-20
+* Fixed for changed URL for live games. (Thanks stupidJoon!)
+
 ## Version 4.0.4 - 2024-12-04
 * Fixed for recent changes to chess.com stylesheets.
 * Fixed for world championship games.
