@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 4.0.6 - 2025-08-27
+* Updated selectors for chess.com UI changes.
+* Fixed share button selector to use aria-label for accurate targeting.
+* Added support for new chess.com component classes (cc-icon-button, cc-tab-item, etc.).
+* Improved PGN tab detection and timestamp checkbox handling.
+
 ## Version 4.0.5 - 2025-03-20
 * Fixed for changed URL for live games. (Thanks stupidJoon!)
 

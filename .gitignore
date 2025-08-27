@@ -5,3 +5,8 @@ dist
 *.sublime-project
 *.sublime-workspace
 .DSStore
+
+# AI assitants and mcps
+.claude
+CLAUDE.md
+.mcp.json

@@ -102,6 +102,12 @@ async function getCurrentPgn_chessTempo(gameId) {
 
 async function openPgnTab() {
     debuglog("openPgnTab");    
+    // Check if PGN tab is already active
+    var activePgnTab = document.querySelector('#tab-pgn.cc-tab-item-active');
+    if (activePgnTab) {
+        return Promise.resolve();
+    }
+    
     var pgnDiv = document.querySelector('div.share-menu-tab-selector-component > div:nth-child(1)') ||
         document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component') ||
         document.querySelector('div.share-menu-tab.share-menu-tab-image-component');
@@ -109,7 +115,8 @@ async function openPgnTab() {
     if (pgnDiv) {
         return Promise.resolve();
     }
-    var pgnTab = document.querySelector("#live_ShareMenuGlobalDialogDownloadButton") ||
+    var pgnTab = document.querySelector("#tab-pgn") || // New tab ID
+        document.querySelector("#live_ShareMenuGlobalDialogDownloadButton") ||
         document.querySelector(".icon-font-chess.download.icon-font-primary") ||
         document.querySelector(".icon-download");
     if (!pgnTab) {
@@ -131,6 +138,8 @@ async function openPgnTab() {
 async function openShareDialog() {
     debuglog("openShareDialog");
     var shareButton =
+        document.querySelector('button[aria-label="Share"]') || // New specific aria-label selector
+        document.querySelector('button.cc-icon-button-component[aria-label="Share"]') || // More specific cc-icon-button
         document.querySelector('span.secondary-controls-icon.download') ||
         document.querySelector('button.share-button-component.icon-share') ||
         document.querySelector('button.share-button-component.icon-share') ||
@@ -156,6 +165,7 @@ async function openShareDialog() {
 function closeShareDialog() {
     debuglog("closeShareDialog");
     var closeButton =
+        document.querySelector(".cc-close-button-component") || // New close button class
         document.querySelector("#live_ShareMenuGlobalDialogCloseButton") ||
         document.querySelector("button.ui_outside-close-component") ||
         document.querySelector(".icon-font-chess.x.icon-font-primary") ||
@@ -190,23 +200,33 @@ async function copyPgn() {
         }
     }
 
-    // PGN with embedded analysis is not parsed correctly by lichess, so disable it.
-    // Note: both radio buttons match this selector (there's nothing unique in the markup).
-    // We're relying on the "Annotation" button being the first one, which is what querySelector gives us.
-    var disableAnalysisRadioButton =
-        document.querySelector('.share-menu-tab-pgn-toggle input[type=radio]');
-    if (disableAnalysisRadioButton) {
-        debuglog("found disable analysis radio button");
+    // Disable timestamps checkbox if it's checked (Lichess doesn't parse them well)
+    var timestampsCheckbox = document.querySelector('#tab-pgn-timestamps');
+    if (timestampsCheckbox && timestampsCheckbox.checked) {
+        debuglog("found timestamps checkbox, disabling");
         await new Promise((resolve, reject) => {
-            disableAnalysisRadioButton.click();
+            timestampsCheckbox.click();
             setTimeout(resolve, 500);
-            debuglog("analysis disabled");
+            debuglog("timestamps disabled");
         });
-    } else {
-        debuglog("could not find disable analysis radio button!");
+    } else if (!timestampsCheckbox) {
+        // Fallback to old selector for backward compatibility
+        var disableAnalysisRadioButton =
+            document.querySelector('.share-menu-tab-pgn-toggle input[type=radio]');
+        if (disableAnalysisRadioButton) {
+            debuglog("found disable analysis radio button");
+            await new Promise((resolve, reject) => {
+                disableAnalysisRadioButton.click();
+                setTimeout(resolve, 500);
+                debuglog("analysis disabled");
+            });
+        } else {
+            debuglog("could not find disable analysis radio button!");
+        }
     }
 
     var textarea = 
+    document.querySelector(".share-menu-tab-pgn-textarea") || // New textarea class
     document.querySelector("#live_ShareMenuPgnContentTextareaId") ||
     document.querySelector("textarea[name=pgn]") ||
     document.querySelector(".form-textarea-component.pgn-download-textarea") ||
