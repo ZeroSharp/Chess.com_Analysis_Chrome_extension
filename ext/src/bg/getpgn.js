@@ -137,7 +137,14 @@ async function openPgnTab() {
 
 async function openShareDialog() {
     debuglog("openShareDialog");
+    // May be nested in secondary controls menu
+    var secondaryControlsButton = document.querySelector(".game-controls-secondary-more > button, .game-controls-secondary-button > button");
+    if (secondaryControlsButton) {
+        debuglog("found secondaryControlsButton");
+        await secondaryControlsButton.click()
+    }
     var shareButton =
+        document.querySelector('[data-cy="analysis-secondary-controls-menu-open-share"]') || // New button nested in secondary controls menu
         document.querySelector('button[aria-label="Share"]') || // New specific aria-label selector
         document.querySelector('button.cc-icon-button-component[aria-label="Share"]') || // More specific cc-icon-button
         document.querySelector('span.secondary-controls-icon.download') ||
@@ -149,12 +156,12 @@ async function openShareDialog() {
         document.querySelector("#shareMenuButton") ||
         document.querySelector(".icon-font-chess.share.icon-font-primary") ||
         document.querySelector(".icon-font-chess.share.game-buttons-icon") ||
-        document.querySelector(".icon-font-chess.share") ||        
+        document.querySelector(".icon-font-chess.share") ||
         document.querySelector(".icon-share");
     if (shareButton) {
         return new Promise((resolve, reject) => {
             shareButton.click()
-            setTimeout(resolve, 1000);
+            setTimeout(resolve, 1500);
         });
     } else {
         debuglog("failed openShareDialog");
