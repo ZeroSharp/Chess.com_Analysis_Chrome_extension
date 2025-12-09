@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 4.0.7 - 2025-12-09
+* Improved share dialog opening for nested controls. (Thanks guidezpl!)
+
 ## Version 4.0.6 - 2025-08-27
 * Updated selectors for chess.com UI changes.
 * Fixed share button selector to use aria-label for accurate targeting.
