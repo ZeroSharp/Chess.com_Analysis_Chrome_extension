@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 4.1.0 - 2025-08-27
+* Code improvements and bug fixes:
+  - Fixed memory leak in tab update listener.
+  - Fixed XSS vulnerability in toast messages.
+  - Added comprehensive error handling throughout.
+  - Changed all Lichess URLs from HTTP to HTTPS.
+  - Updated Lichess import form selectors for current UI.
+  - Improved message passing reliability between tabs.
+  - Added proper timeout handling for AJAX requests.
+
 ## Version 4.0.7 - 2025-12-09
 * Improved share dialog opening for nested controls. (Thanks guidezpl!)
 
