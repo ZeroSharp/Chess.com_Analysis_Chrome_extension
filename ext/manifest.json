@@ -4,7 +4,6 @@
   "manifest_version": 3,
   "description": "Opens PGN of a game from chess.com or chessgames.com in lichess.org analysis",
   "homepage_url": "http://www.zerosharp.com",
-  "update_url": "https://clients2.google.com/service/update2/crx",
   "icons": {
       "128": "icons/knight128.png",
       "16": "icons/knight16.png",
