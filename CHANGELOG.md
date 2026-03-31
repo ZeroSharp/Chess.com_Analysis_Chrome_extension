@@ -4,7 +4,7 @@
 * Fixed share button not found on non-English browser locales by adding locale-independent selector. (Thanks blue-int!)
 * Removed Chrome Web Store update_url for Edge compatibility.
 
-## Version 4.1.0 - 2025-08-27
+## Version 4.1.0 - 2025-12-09
 * Code improvements and bug fixes:
   - Fixed memory leak in tab update listener.
   - Fixed XSS vulnerability in toast messages.
