@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 4.1.1 - 2026-03-31
+* Fixed share button not found on non-English browser locales by adding locale-independent selector. (Thanks blue-int!)
+* Removed Chrome Web Store update_url for Edge compatibility.
+
 ## Version 4.1.0 - 2025-08-27
 * Code improvements and bug fixes:
   - Fixed memory leak in tab update listener.
