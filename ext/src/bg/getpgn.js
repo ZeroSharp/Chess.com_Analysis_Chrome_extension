@@ -192,20 +192,21 @@ async function openShareDialog() {
         await secondaryControlsButton.click()
     }
     var shareButton =
+        document.querySelector('[data-cy="sidebar-share-icon"]') || // Locale-independent selector (works in all languages)
         document.querySelector('[data-cy="analysis-secondary-controls-menu-open-share"]') || // New button nested in secondary controls menu
-        document.querySelector('button[aria-label="Share"]') || // New specific aria-label selector
-        document.querySelector('button.cc-icon-button-component[aria-label="Share"]') || // More specific cc-icon-button
+        document.querySelector('button[aria-label="Share"]') || // English aria-label
+        document.querySelector('button[aria-label="공유"]') || // Korean aria-label
+        document.querySelector('button.cc-icon-button-component[aria-label="Share"]') ||
         document.querySelector('span.secondary-controls-icon.download') ||
-        document.querySelector('button.share-button-component.icon-share') ||
         document.querySelector('button.share-button-component.icon-share') ||
         document.querySelector('button.icon-font-chess.share.live-game-buttons-button') ||
         document.querySelector('button.share-button-component.share') ||
         document.querySelector("button[data-test='download']") ||
-        document.querySelector("#shareMenuButton") ||
-        document.querySelector(".icon-font-chess.share.icon-font-primary") ||
-        document.querySelector(".icon-font-chess.share.game-buttons-icon") ||
-        document.querySelector(".icon-font-chess.share") ||
-        document.querySelector(".icon-share");
+        document.querySelector('#shareMenuButton') ||
+        document.querySelector('.icon-font-chess.share.icon-font-primary') ||
+        document.querySelector('.icon-font-chess.share.game-buttons-icon') ||
+        document.querySelector('.icon-font-chess.share') ||
+        document.querySelector('.icon-share');
     if (shareButton) {
         return new Promise((resolve) => {
             shareButton.click()
