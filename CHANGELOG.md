@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 4.1.2 - 2026-07-21
+* Fixed PGN being sent to Lichess with move timestamps when the chess.com "Include PGN Timestamps" option was enabled.
+* Added a locale-independent share button selector based on the icon glyph, replacing the data-cy attribute chess.com removed.
+* Replaced fixed delays with waits for the content to actually appear. The share dialog previously had a fixed 1.5 second budget and could fail on a slow connection, and the PGN was read before the timestamps setting had taken effect.
+
 ## Version 4.1.1 - 2026-03-31
 * Fixed share button not found on non-English browser locales by adding locale-independent selector. (Thanks blue-int!)
 * Removed Chrome Web Store update_url for Edge compatibility.

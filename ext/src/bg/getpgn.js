@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           sendResponse(null);
       });
 
-    return true;  
+    return true;
 });
 
 
@@ -126,72 +126,56 @@ async function getCurrentPgn_chessTempo(gameId) {
     }
 }
 
-async function openPgnTab() {
-    debuglog("openPgnTab");    
-    // Check if PGN tab is already active
-    var activePgnTab = document.querySelector('#tab-pgn.cc-tab-item-active');
-    if (activePgnTab) {
-        debuglog("PGN tab already active");
-        return Promise.resolve();
-    }
-    
-    // Check if PGN content is already visible (for older UI)
-    var pgnDiv = document.querySelector('div.share-menu-tab-selector-component > div:nth-child(1)') ||
-        document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component') ||
-        document.querySelector('div.share-menu-tab.share-menu-tab-image-component');
-
-    if (pgnDiv) {
-        debuglog("PGN content already visible");
-        return Promise.resolve();
-    }
-    
-    // Try to find and click the PGN tab
-    var pgnTab = document.querySelector("#tab-pgn") || // New tab ID
-        document.querySelector("#live_ShareMenuGlobalDialogDownloadButton") ||
-        document.querySelector(".icon-font-chess.download.icon-font-primary") ||
-        document.querySelector(".icon-download");
-    
-    if (!pgnTab) {
-        // Fallback: search for PGN text in dialog
-        var headerElements = document.querySelectorAll(
-            ".share-menu-dialog-component header *, .cc-modal-body button, div[role='dialog'] button");
-        if (headerElements.length > 0) {
-            pgnTab = Array.from(headerElements).filter(
-                (x) => x.textContent && x.textContent.trim() === "PGN")[0];
+// Waits until predicate returns a truthy value, or gives up after timeoutMs.
+// Returns the value, or undefined on timeout.
+async function waitFor(predicate, timeoutMs = 5000, intervalMs = 100) {
+    const deadline = Date.now() + timeoutMs;
+    for (;;) {
+        const value = predicate();
+        if (value) {
+            return value;
         }
-    }
-    
-    if (pgnTab) {
-        debuglog("Found PGN tab, clicking");
-        return new Promise((resolve) => {
-            pgnTab.click();
-            setTimeout(resolve, 500);
-        });
-    } else {
-        // If PGN tab not found, it might already be selected or the UI has changed
-        // Check if PGN textarea is already visible
-        var pgnTextarea = document.querySelector(".share-menu-tab-pgn-textarea") ||
-            document.querySelector("textarea[name=pgn]");
-        if (pgnTextarea) {
-            debuglog("PGN textarea already visible, tab might be selected by default");
-            return Promise.resolve();
+        if (Date.now() >= deadline) {
+            return undefined;
         }
-        
-        debuglog("Warning: Could not find PGN tab, attempting to continue");
-        // Don't throw error, try to continue - the PGN might be available anyway
-        return Promise.resolve();
+        await new Promise((resolve) => setTimeout(resolve, intervalMs));
     }
 }
 
-async function openShareDialog() {
-    debuglog("openShareDialog");
-    // May be nested in secondary controls menu
-    var secondaryControlsButton = document.querySelector(".game-controls-secondary-more > button, .game-controls-secondary-button > button");
-    if (secondaryControlsButton) {
-        debuglog("found secondaryControlsButton");
-        await secondaryControlsButton.click()
-    }
-    var shareButton =
+function findPgnTextarea() {
+    return document.querySelector(".share-menu-tab-pgn-textarea") || // Current textarea class
+        document.querySelector("#live_ShareMenuPgnContentTextareaId") ||
+        document.querySelector("textarea[name=pgn]") ||
+        document.querySelector(".form-textarea-component.pgn-download-textarea") ||
+        document.querySelector("#chessboard_ShareMenuPgnContentTextareaId");
+}
+
+function findLegacyPgnDiv() {
+    return document.querySelector('div.share-menu-tab-selector-component > div:nth-child(1)') ||
+        document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-gif-component') ||
+        document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component') ||
+        document.querySelector('div.share-menu-tab.share-menu-tab-gif-component') ||
+        document.querySelector('div.share-menu-tab.share-menu-tab-image-component');
+}
+
+// Older UI variants carried the PGN in a "pgn" attribute on the share tab panel.
+// The panel elements still exist in the current UI but without that attribute,
+// so callers must check for the attribute rather than the element.
+function findLegacyPgnAttribute() {
+    const pgnDiv = findLegacyPgnDiv();
+    const pgnAttr = pgnDiv && pgnDiv.attributes["pgn"];
+    return pgnAttr ? pgnAttr.value : null;
+}
+
+function findPgnTabButton() {
+    return document.querySelector("#tab-pgn") || // New tab ID
+        document.querySelector("#live_ShareMenuGlobalDialogDownloadButton") ||
+        document.querySelector(".icon-font-chess.download.icon-font-primary") ||
+        document.querySelector(".icon-download");
+}
+
+function findShareButton() {
+    return document.querySelector('button:has(svg[data-glyph="graph-nodes-share"])') || // Locale-independent: icon glyph name, not translated text
         document.querySelector('[data-cy="sidebar-share-icon"]') || // Locale-independent selector (works in all languages)
         document.querySelector('[data-cy="analysis-secondary-controls-menu-open-share"]') || // New button nested in secondary controls menu
         document.querySelector('button[aria-label="Share"]') || // English aria-label
@@ -207,14 +191,88 @@ async function openShareDialog() {
         document.querySelector('.icon-font-chess.share.game-buttons-icon') ||
         document.querySelector('.icon-font-chess.share') ||
         document.querySelector('.icon-share');
-    if (shareButton) {
-        return new Promise((resolve) => {
-            shareButton.click()
-            setTimeout(resolve, 1500);
+}
+
+// True once the share dialog has rendered something the later steps can use.
+function shareDialogContentPresent() {
+    return findPgnTabButton() || findPgnTextarea() || findLegacyPgnDiv();
+}
+
+async function openPgnTab() {
+    debuglog("openPgnTab");
+
+    // Nothing to do if the PGN is already available.
+    const textarea = findPgnTextarea();
+    if (textarea && textarea.value) {
+        debuglog("PGN textarea already populated");
+        return;
+    }
+
+    // Note: deliberately no early exit on the legacy pgn attribute here. It is
+    // present in the current UI too, but it honours the user's persisted
+    // "Include PGN Timestamps" setting, which Lichess parses poorly. Opening the
+    // PGN tab lets copyPgn turn timestamps off and read the clean textarea.
+
+    // Check if PGN tab is already active
+    var activePgnTab = document.querySelector('#tab-pgn.cc-tab-item-active');
+    if (activePgnTab) {
+        debuglog("PGN tab already active");
+        return;
+    }
+
+    // Try to find and click the PGN tab
+    var pgnTab = findPgnTabButton();
+
+    if (!pgnTab) {
+        // Fallback: search for PGN text in dialog
+        var headerElements = document.querySelectorAll(
+            ".share-menu-dialog-component header *, .cc-modal-body button, div[role='dialog'] button");
+        if (headerElements.length > 0) {
+            pgnTab = Array.from(headerElements).filter(
+                (x) => x.textContent && x.textContent.trim() === "PGN")[0];
+        }
+    }
+    
+    if (pgnTab) {
+        debuglog("Found PGN tab, clicking");
+        pgnTab.click();
+        // The textarea is rendered and populated asynchronously after the click.
+        await waitFor(() => {
+            const ta = findPgnTextarea();
+            return ta && ta.value;
         });
-    } else {
+        return;
+    }
+
+    debuglog("Warning: Could not find PGN tab, attempting to continue");
+    // Don't throw - the PGN might be available anyway
+}
+
+async function openShareDialog() {
+    debuglog("openShareDialog");
+    // May be nested in secondary controls menu
+    var secondaryControlsButton = document.querySelector(".game-controls-secondary-more > button, .game-controls-secondary-button > button");
+    if (secondaryControlsButton) {
+        debuglog("found secondaryControlsButton");
+        secondaryControlsButton.click();
+        // The menu renders asynchronously, so give the share button a chance to
+        // appear rather than looking for it in the same tick.
+        await waitFor(findShareButton, 2000);
+    }
+    var shareButton = findShareButton();
+    if (!shareButton) {
         debuglog("failed openShareDialog");
         throw new Error('Share button not found');
+    }
+
+    shareButton.click();
+    // Wait for the dialog to actually render. A fixed delay here was the weakest
+    // link: on a slow connection the dialog can take longer than any delay we
+    // would pick, and everything downstream then finds nothing.
+    if (!await waitFor(shareDialogContentPresent)) {
+        debuglog("share dialog did not appear in time");
+        // Don't throw - copyPgn still reports a more specific error if the PGN
+        // really is unreachable.
     }
 }
 
@@ -239,41 +297,18 @@ function closeShareDialog() {
 async function copyPgn() {
     debuglog("copyPgn");    
 
-    // First check if PGN textarea is already available (most common case now)
-    var textarea = 
-    document.querySelector(".share-menu-tab-pgn-textarea") || // New textarea class
-    document.querySelector("#live_ShareMenuPgnContentTextareaId") ||
-    document.querySelector("textarea[name=pgn]") ||
-    document.querySelector(".form-textarea-component.pgn-download-textarea") ||
-    document.querySelector("#chessboard_ShareMenuPgnContentTextareaId");
-    
-    if (textarea && textarea.value) {
-        debuglog("Found PGN in textarea immediately");
-        return textarea.value;
-    }
-
-    // Check older UI with pgn attribute
-    var pgnDiv = document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-gif-component') ||
-    document.querySelector('div.alt-share-menu-tab.alt-share-menu-tab-image-component') ||
-    document.querySelector('div.share-menu-tab.share-menu-tab-gif-component') ||
-    document.querySelector('div.share-menu-tab.share-menu-tab-image-component');
-
-    if (pgnDiv) {
-        const pgnAttr = pgnDiv.attributes["pgn"];
-        if (pgnAttr) {
-            return pgnAttr.value;
-        }
-    }
-
     // Disable timestamps checkbox if it's checked (Lichess doesn't parse them well)
     var timestampsCheckbox = document.querySelector('#tab-pgn-timestamps');
     if (timestampsCheckbox && timestampsCheckbox.checked) {
         debuglog("found timestamps checkbox, disabling");
-        await new Promise((resolve) => {
-            timestampsCheckbox.click();
-            setTimeout(resolve, 500);
-            debuglog("timestamps disabled");
+        timestampsCheckbox.click();
+        // The textarea still holds the timestamped text until it re-renders, so
+        // wait for the timestamps to actually go rather than a fixed delay.
+        await waitFor(() => {
+            const ta = findPgnTextarea();
+            return ta && ta.value && !ta.value.includes('%clk');
         });
+        debuglog("timestamps disabled");
     } else if (!timestampsCheckbox) {
         // Fallback to old selector for backward compatibility
         var disableAnalysisRadioButton =
@@ -290,20 +325,28 @@ async function copyPgn() {
         }
     }
 
-    var textarea = 
-    document.querySelector(".share-menu-tab-pgn-textarea") || // New textarea class
-    document.querySelector("#live_ShareMenuPgnContentTextareaId") ||
-    document.querySelector("textarea[name=pgn]") ||
-    document.querySelector(".form-textarea-component.pgn-download-textarea") ||
-    document.querySelector("#chessboard_ShareMenuPgnContentTextareaId");
-
-    if (textarea) {
-        debuglog(textarea.value);
-        return textarea.value;
-    } else {
-        debuglog("textarea failed");
-        throw new Error('PGN textarea not found');
+    // Only wait if the current UI actually renders a textarea, so older UIs fall
+    // through to the attribute below without stalling for the full timeout.
+    if (findPgnTextarea()) {
+        const textarea = await waitFor(() => {
+            const ta = findPgnTextarea();
+            return ta && ta.value ? ta : null;
+        });
+        if (textarea) {
+            debuglog(textarea.value);
+            return textarea.value;
+        }
     }
+
+    // Older UI exposed the PGN as an attribute instead of a textarea.
+    const legacyPgn = findLegacyPgnAttribute();
+    if (legacyPgn) {
+        debuglog("Found PGN in legacy pgn attribute");
+        return legacyPgn;
+    }
+
+    debuglog("textarea failed");
+    throw new Error('PGN textarea not found');
 }
 
 async function popuptoast(message) {
